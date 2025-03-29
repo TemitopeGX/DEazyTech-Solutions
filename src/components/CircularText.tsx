@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, useAnimation, MotionStyle } from "framer-motion";
+import { CSSProperties } from "react";
 
 const getRotationTransition = (
   duration: number,
@@ -125,7 +126,11 @@ const CircularText = ({
           <span
             key={i}
             className="absolute inline-block inset-0 text-2xl transition-all duration-500 ease-[cubic-bezier(0,0,0,1)]"
-            style={{ transform, WebkitTransform: transform } as MotionStyle}
+            style={{
+              transform,
+              WebkitTransform: transform,
+              display: "inline-block",
+            }}
           >
             {letter}
           </span>
