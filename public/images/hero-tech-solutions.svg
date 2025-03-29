@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <circle cx="400" cy="300" r="250" fill="url(#gradient1)" opacity="0.1"/>
+  <circle cx="400" cy="300" r="200" fill="url(#gradient2)" opacity="0.15"/>
+  
+  <!-- Main Character -->
+  <g transform="translate(250, 100)">
+    <!-- Character Head -->
+    <circle cx="150" cy="150" r="60" fill="#FFD3B6"/> <!-- Face -->
+    <path d="M110 130 Q150 160 190 130" stroke="#2A2A2A" fill="none" stroke-width="2"/> <!-- Smile -->
+    <circle cx="130" cy="120" r="5" fill="#2A2A2A"/> <!-- Left Eye -->
+    <circle cx="170" cy="120" r="5" fill="#2A2A2A"/> <!-- Right Eye -->
+    
+    <!-- Hair -->
+    <path d="M90 150 Q90 80 150 80 Q210 80 210 150" fill="#2A2A2A"/>
+    <path d="M90 120 Q90 90 150 90 Q210 90 210 120" fill="#2A2A2A"/>
+    
+    <!-- Glasses -->
+    <rect x="120" y="115" width="20" height="15" rx="5" fill="none" stroke="#4e10d3" stroke-width="2"/>
+    <rect x="160" y="115" width="20" height="15" rx="5" fill="none" stroke="#4e10d3" stroke-width="2"/>
+    <line x1="140" y1="122" x2="160" y2="122" stroke="#4e10d3" stroke-width="2"/>
+    
+    <!-- Body/Outfit -->
+    <path d="M110 210 Q150 230 190 210 L200 350 H100 L110 210" fill="#4e10d3"/> <!-- Shirt -->
+    <rect x="130" y="190" width="40" height="20" fill="#ff096c"/> <!-- Collar -->
+    
+    <!-- Arms -->
+    <path d="M110 220 Q80 240 60 280" stroke="#4e10d3" stroke-width="40" stroke-linecap="round"/>
+    <path d="M190 220 Q220 240 240 280" stroke="#4e10d3" stroke-width="40" stroke-linecap="round"/>
+    
+    <!-- Laptop -->
+    <g transform="translate(-20, 40)">
+      <rect x="60" y="240" width="220" height="140" rx="10" fill="#2A2A2A"/> <!-- Screen -->
+      <rect x="70" y="250" width="200" height="120" rx="5" fill="#1E1E1E"/> <!-- Display -->
+      <path d="M40 380 L300 380 L280 400 H60 L40 380" fill="#2A2A2A"/> <!-- Base -->
+      
+      <!-- Code on Screen -->
+      <rect x="80" y="260" width="80" height="8" rx="2" fill="#ff096c"/>
+      <rect x="80" y="276" width="160" height="8" rx="2" fill="#8a0faf"/>
+      <rect x="80" y="292" width="120" height="8" rx="2" fill="#4e10d3"/>
+      <rect x="80" y="308" width="140" height="8" rx="2" fill="#ff096c"/>
+    </g>
+  </g>
+  
+  <!-- Floating Elements -->
+  <g transform="translate(500, 150)">
+    <!-- Tech Icons -->
+    <g className="floating-icon">
+      <circle cx="50" cy="50" r="20" fill="#ff096c" opacity="0.9"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="monospace" font-size="20">&lt;/&gt;</text>
+    </g>
+    
+    <g className="floating-icon" transform="translate(60, -30)">
+      <circle cx="50" cy="50" r="20" fill="#4e10d3" opacity="0.9"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="monospace" font-size="20">{ }</text>
+    </g>
+    
+    <g className="floating-icon" transform="translate(-30, 60)">
+      <circle cx="50" cy="50" r="20" fill="#8a0faf" opacity="0.9"/>
+      <path d="M40,50 L60,50 M50,40 L50,60" stroke="white" stroke-width="2"/>
+    </g>
+  </g>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff096c;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#8a0faf;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4e10d3;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#15181e;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Animation Elements -->
+  <style>
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .floating-icon {
+      animation: float 3s ease-in-out infinite;
+    }
+    .floating-icon:nth-child(2) {
+      animation-delay: -1s;
+    }
+    .floating-icon:nth-child(3) {
+      animation-delay: -2s;
+    }
+  </style>
+</svg> 

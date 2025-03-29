@@ -1,0 +1,9 @@
+Please replace these placeholder files with actual expert profile images:
+
+1. expert1.jpg - Alex Johnson's professional photo
+2. expert2.jpg - Sarah Chen's professional photo
+3. expert3.jpg - Michael Brown's professional photo
+
+Image dimensions should be 800x600 pixels for optimal display in the expert cards.
+
+Note: Use professional headshots or workspace photos that reflect the expertise and professionalism of your team members. 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff096c"/>
+      <stop offset="100%" style="stop-color:#8a0faf"/>
+    </linearGradient>
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4e10d3"/>
+      <stop offset="100%" style="stop-color:#15181e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main Device Frame -->
+  <g transform="translate(100, 50)">
+    <!-- Laptop Base -->
+    <path d="M50 400 L550 400 C570 400 580 390 580 370 L580 100 C580 80 570 70 550 70 L50 70 C30 70 20 80 20 100 L20 370 C20 390 30 400 50 400" 
+          fill="#2a2a2a" stroke="#333" stroke-width="2"/>
+    
+    <!-- Screen -->
+    <rect x="40" y="90" width="520" height="290" rx="8" fill="url(#screenGradient)"/>
+    
+    <!-- Code Elements -->
+    <g transform="translate(60, 110)" fill="none" stroke="#ff096c" stroke-width="2" opacity="0.6">
+      <path d="M0 20 L40 20 M0 40 L60 40 M0 60 L50 60" stroke-opacity="0.3"/>
+      <path d="M80 20 L100 40 L80 60" stroke-opacity="0.8"/>
+      <path d="M120 20 L140 40 L120 60" stroke-opacity="0.6"/>
+    </g>
+
+    <!-- Floating Elements -->
+    <g transform="translate(200, 150)">
+      <!-- UI Elements -->
+      <rect x="0" y="0" width="120" height="80" rx="8" fill="url(#primaryGradient)" opacity="0.8"/>
+      <rect x="140" y="30" width="180" height="20" rx="4" fill="#fff" opacity="0.2"/>
+      <rect x="140" y="60" width="140" height="20" rx="4" fill="#fff" opacity="0.1"/>
+      
+      <!-- Circles -->
+      <circle cx="340" cy="40" r="30" fill="url(#primaryGradient)" opacity="0.6"/>
+      <circle cx="380" cy="80" r="20" fill="#ff096c" opacity="0.4"/>
+      <circle cx="350" cy="100" r="15" fill="#8a0faf" opacity="0.3"/>
+    </g>
+
+    <!-- Abstract Lines -->
+    <g transform="translate(60, 250)" stroke="#fff" stroke-width="1" opacity="0.2">
+      <path d="M0 0 L100 0 M120 0 L220 0 M240 0 L340 0" stroke-dasharray="4,4"/>
+      <path d="M0 20 L80 20 M100 20 L180 20 M200 20 L280 20" stroke-dasharray="4,4"/>
+      <path d="M0 40 L120 40 M140 40 L260 40" stroke-dasharray="4,4"/>
+    </g>
+
+    <!-- Decorative Elements -->
+    <g transform="translate(440, 180)">
+      <path d="M0 0 L40 40 L0 80" fill="none" stroke="url(#primaryGradient)" stroke-width="4" opacity="0.6"/>
+      <circle cx="60" cy="40" r="20" fill="none" stroke="url(#primaryGradient)" stroke-width="4" opacity="0.4"/>
+      <rect x="90" y="20" width="40" height="40" rx="8" fill="none" stroke="url(#primaryGradient)" stroke-width="4" opacity="0.3"/>
+    </g>
+  </g>
+
+  <!-- Floating Particles -->
+  <g>
+    <circle cx="50" cy="150" r="4" fill="#ff096c" opacity="0.6"/>
+    <circle cx="750" cy="300" r="3" fill="#8a0faf" opacity="0.5"/>
+    <circle cx="700" cy="100" r="5" fill="#4e10d3" opacity="0.4"/>
+    <circle cx="150" cy="500" r="4" fill="#ff096c" opacity="0.3"/>
+    <circle cx="650" cy="450" r="3" fill="#8a0faf" opacity="0.5"/>
+  </g>
+
+  <!-- Connection Lines -->
+  <g stroke="#ff096c" stroke-width="1" opacity="0.2">
+    <path d="M50 150 L150 500" stroke-dasharray="4,4"/>
+    <path d="M750 300 L650 450" stroke-dasharray="4,4"/>
+    <path d="M700 100 L750 300" stroke-dasharray="4,4"/>
+  </g>
+</svg> 

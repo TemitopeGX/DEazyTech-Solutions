@@ -1,0 +1,6 @@
+Please replace these placeholder files with your actual testimonial images:
+
+1. john.jpg - John Smith's professional headshot
+2. sarah.jpg - Sarah Johnson's professional headshot
+
+Image dimensions should be 200x200 pixels for optimal display. 
