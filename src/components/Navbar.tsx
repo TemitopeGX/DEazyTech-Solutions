@@ -21,7 +21,7 @@ const Navbar = () => {
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
-
+    { href: "/recent-projects", label: "Recent Projects" },
     { href: "/hire-experts", label: "Hire Experts" },
     { href: "/contact", label: "Contact" },
   ];
@@ -31,8 +31,8 @@ const Navbar = () => {
       <motion.nav
         className={`mx-auto max-w-7xl transition-all duration-300 ${
           isScrolled
-            ? "bg-white/90 backdrop-blur-md shadow-lg rounded-2xl px-6"
-            : "bg-transparent px-4"
+            ? "bg-white shadow-lg rounded-2xl px-6 py-2"
+            : "bg-white px-4 py-4"
         }`}
         initial={{ y: -100 }}
         animate={{
@@ -43,16 +43,16 @@ const Navbar = () => {
         }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex items-center justify-between h-16 relative">
+        <div className="flex items-center justify-between relative">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-[140px] sm:w-[160px] flex-shrink-0"
+            className="w-[120px] sm:w-[140px] flex-shrink-0"
           >
             <Link href="/" className="flex items-center">
-              <div className="relative w-full h-10 sm:h-12">
+              <div className="relative w-full h-8 sm:h-10">
                 <Image
                   src="/images/logo-2.png"
                   alt="DEAZY Tech Solutions"
@@ -69,7 +69,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="hidden lg:flex items-center justify-center absolute left-1/2 -translate-x-1/2 space-x-6 xl:space-x-8"
+            className="hidden lg:flex items-center justify-center space-x-8"
           >
             {navItems.map((item, index) => (
               <motion.div
@@ -79,9 +79,7 @@ const Navbar = () => {
               >
                 <Link
                   href={item.href}
-                  className={`text-sm font-medium transition-colors ${
-                    isScrolled ? "text-gray-800" : "text-gray-800"
-                  } hover:text-primary-500`}
+                  className={`text-sm font-medium transition-colors text-gray-800 hover:text-[#ff096c]`}
                 >
                   {item.label}
                 </Link>
@@ -93,11 +91,11 @@ const Navbar = () => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="hidden sm:block flex-shrink-0"
+            className="hidden sm:block"
           >
             <Link
               href="/start-project"
-              className="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap"
+              className="px-6 py-2.5 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap shadow-lg"
             >
               Start Project
             </Link>
@@ -105,19 +103,15 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="lg:hidden text-2xl flex-shrink-0"
+            className="lg:hidden text-2xl"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
             {isMobileMenuOpen ? (
-              <FaTimes
-                className={isScrolled ? "text-gray-800" : "text-gray-800"}
-              />
+              <FaTimes className="text-gray-800" />
             ) : (
-              <FaBars
-                className={isScrolled ? "text-gray-800" : "text-gray-800"}
-              />
+              <FaBars className="text-gray-800" />
             )}
           </motion.button>
         </div>
@@ -129,9 +123,9 @@ const Navbar = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-white/95 backdrop-blur-sm mt-2 rounded-xl shadow-lg"
+              className="lg:hidden bg-white/95 backdrop-blur-sm mt-4 rounded-xl shadow-lg"
             >
-              <div className="px-4 py-4">
+              <div className="px-6 py-6">
                 <div className="flex flex-col space-y-4">
                   {navItems.map((item, index) => (
                     <motion.div
@@ -142,7 +136,7 @@ const Navbar = () => {
                     >
                       <Link
                         href={item.href}
-                        className="block text-gray-800 hover:text-primary-500 font-medium"
+                        className="block text-gray-800 hover:text-[#ff096c] font-medium text-lg"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {item.label}
@@ -153,11 +147,11 @@ const Navbar = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: navItems.length * 0.1 }}
-                    className="sm:hidden"
+                    className="pt-4"
                   >
                     <Link
                       href="/start-project"
-                      className="inline-block px-6 py-2.5 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+                      className="inline-block w-full text-center px-6 py-3 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white rounded-full text-base font-medium hover:opacity-90 transition-opacity shadow-lg"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Start Project

@@ -224,6 +224,27 @@ const HomePage: React.FC = () => {
     },
   ];
 
+  const projects = [
+    {
+      id: 1,
+      title: "Learning Management System",
+      description:
+        "A comprehensive LMS platform with live classes, assessments, and student tracking.",
+      image: "/images/projects/lms-preview.jpg",
+      tags: ["Next.js", "React", "Node.js", "MongoDB"],
+      link: "#",
+    },
+    {
+      id: 2,
+      title: "E-commerce Platform",
+      description:
+        "Modern e-commerce solution with real-time inventory and payment processing.",
+      image: "/images/projects/ecommerce.jpg",
+      tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
+      link: "#",
+    },
+  ];
+
   return (
     <>
       <Head>
@@ -251,10 +272,10 @@ const HomePage: React.FC = () => {
         />
       </Head>
 
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-10"></div>
+          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5"></div>
           <div className="container mx-auto px-4 relative">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <motion.div
@@ -337,6 +358,309 @@ const HomePage: React.FC = () => {
                 </div>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerChildren}
+              className="text-center mb-16"
+            >
+              <motion.h2
+                variants={fadeInUp}
+                className="text-3xl md:text-4xl font-bold mb-4"
+              >
+                Our Services
+              </motion.h2>
+              <motion.p
+                variants={fadeInUp}
+                className="text-gray-600 max-w-2xl mx-auto"
+              >
+                We offer comprehensive software solutions to help your business
+                grow and succeed in the digital age.
+              </motion.p>
+            </motion.div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerChildren}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
+              {services.map((service, index) => (
+                <motion.div
+                  key={index}
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                  className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-100 group hover:border-[#8a0faf]"
+                >
+                  <motion.div
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                    className="mb-4 text-[#8a0faf]"
+                  >
+                    <service.icon size={40} />
+                  </motion.div>
+                  <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                  <p className="text-gray-600 mb-4">{service.description}</p>
+                  <motion.ul variants={staggerChildren} className="space-y-2">
+                    {service.features.map((feature, idx) => (
+                      <motion.li
+                        key={idx}
+                        variants={fadeInUp}
+                        className="flex items-center text-gray-600"
+                      >
+                        <FaCheckCircle
+                          className="text-[#ff096c] mr-2"
+                          size={14}
+                        />
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Recent Projects Section */}
+        <motion.section
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerChildren}
+          className="py-20 bg-white"
+        >
+          <div className="container mx-auto px-4">
+            <motion.div variants={fadeInUp} className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4 text-gray-800">
+                Recent Projects
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Explore our latest work and see how we help businesses transform
+                their digital presence
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {projects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  variants={fadeInUp}
+                  className="bg-white rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-gray-100"
+                >
+                  <div className="relative h-64">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold mb-2 text-gray-800">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link
+                      href={project.link}
+                      className="inline-block bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity duration-300"
+                    >
+                      View Project
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div variants={fadeInUp} className="text-center">
+              <Link
+                href="/recent-projects"
+                className="inline-flex items-center justify-center px-8 py-3 text-lg font-medium text-white bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full hover:opacity-90 transition-opacity"
+              >
+                View All Projects
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </Link>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* Why Choose Us Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerChildren}
+              className="text-center mb-16"
+            >
+              <motion.h2
+                variants={fadeInUp}
+                className="text-3xl md:text-4xl font-bold mb-4"
+              >
+                Why Choose Us
+              </motion.h2>
+              <motion.p
+                variants={fadeInUp}
+                className="text-gray-600 max-w-2xl mx-auto"
+              >
+                We're committed to delivering excellence in every project we
+                undertake.
+              </motion.p>
+            </motion.div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerChildren}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
+              {features.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.05 }}
+                  className="text-center group hover:bg-gradient-to-r hover:from-[#15181e] hover:to-[#4e10d3] p-8 rounded-xl transition-all"
+                >
+                  <motion.div
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.2, rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-4 inline-block p-4 bg-gray-50 rounded-full group-hover:bg-white/10 transition-colors"
+                  >
+                    <feature.icon
+                      className="text-[#8a0faf] group-hover:text-white transition-colors"
+                      size={32}
+                    />
+                  </motion.div>
+                  <motion.h3
+                    variants={fadeInUp}
+                    className="text-xl font-bold mb-3 group-hover:text-white transition-colors"
+                  >
+                    {feature.title}
+                  </motion.h3>
+                  <motion.p
+                    variants={fadeInUp}
+                    className="text-gray-600 group-hover:text-gray-200 transition-colors"
+                  >
+                    {feature.description}
+                  </motion.p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Featured Project Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerChildren}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            >
+              <motion.div variants={slideIn}>
+                <motion.span
+                  variants={fadeInUp}
+                  className="text-[#ff096c] font-semibold mb-2 block"
+                >
+                  Featured Project
+                </motion.span>
+                <motion.h2
+                  variants={fadeInUp}
+                  className="text-3xl md:text-4xl font-bold mb-6"
+                >
+                  Learning Management System
+                </motion.h2>
+                <motion.p variants={fadeInUp} className="text-gray-600 mb-6">
+                  Our flagship LMS solution powers educational institutions and
+                  corporate training programs with cutting-edge features.
+                </motion.p>
+                <motion.ul variants={staggerChildren} className="space-y-4">
+                  {[
+                    "Web Dashboard for centralized management",
+                    "Tutor & Student mobile apps",
+                    "Live & pre-recorded sessions",
+                    "Automated assessments & certification",
+                    "Payment gateway integration",
+                    "Progress tracking & analytics",
+                  ].map((feature, index) => (
+                    <motion.li
+                      key={index}
+                      variants={fadeInUp}
+                      className="flex items-center space-x-3 text-gray-700"
+                    >
+                      <motion.div
+                        initial={{ scale: 1 }}
+                        whileHover={{ scale: 1.2, rotate: 360 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-[#8a0faf]"
+                      >
+                        <FaCheckCircle size={20} />
+                      </motion.div>
+                      <span>{feature}</span>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+                <motion.div variants={fadeInUp} className="mt-8">
+                  <Link
+                    href="/services"
+                    className="text-[#8a0faf] font-semibold hover:text-[#ff096c] transition-colors inline-flex items-center space-x-2"
+                  >
+                    <span>Learn More</span>
+                    <FaRocket size={16} />
+                  </Link>
+                </motion.div>
+              </motion.div>
+              <motion.div
+                variants={scaleIn}
+                whileHover={{ scale: 1.02 }}
+                className="bg-white p-8 rounded-2xl shadow-xl"
+              >
+                <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
+                  <Image
+                    src="/images/lms-preview.jpg"
+                    alt="LMS Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
 
@@ -458,77 +782,8 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                Our Services
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                We offer comprehensive software solutions to help your business
-                grow and succeed in the digital age.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {services.map((service, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-100 group hover:border-[#8a0faf]"
-                >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                    className="mb-4 text-[#8a0faf]"
-                  >
-                    <service.icon size={40} />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-                  <p className="text-gray-600 mb-4">{service.description}</p>
-                  <motion.ul variants={staggerChildren} className="space-y-2">
-                    {service.features.map((feature, idx) => (
-                      <motion.li
-                        key={idx}
-                        variants={fadeInUp}
-                        className="flex items-center text-gray-600"
-                      >
-                        <FaCheckCircle
-                          className="text-[#ff096c] mr-2"
-                          size={14}
-                        />
-                        <span>{feature}</span>
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
         {/* Industries Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -588,89 +843,8 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Featured Project Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            >
-              <motion.div variants={slideIn}>
-                <motion.span
-                  variants={fadeInUp}
-                  className="text-[#ff096c] font-semibold mb-2 block"
-                >
-                  Featured Project
-                </motion.span>
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-3xl md:text-4xl font-bold mb-6"
-                >
-                  Learning Management System
-                </motion.h2>
-                <motion.p variants={fadeInUp} className="text-gray-600 mb-6">
-                  Our flagship LMS solution powers educational institutions and
-                  corporate training programs with cutting-edge features.
-                </motion.p>
-                <motion.ul variants={staggerChildren} className="space-y-4">
-                  {[
-                    "Web Dashboard for centralized management",
-                    "Tutor & Student mobile apps",
-                    "Live & pre-recorded sessions",
-                    "Automated assessments & certification",
-                    "Payment gateway integration",
-                    "Progress tracking & analytics",
-                  ].map((feature, index) => (
-                    <motion.li
-                      key={index}
-                      variants={fadeInUp}
-                      className="flex items-center space-x-3 text-gray-700"
-                    >
-                      <motion.div
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.2, rotate: 360 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-[#8a0faf]"
-                      >
-                        <FaCheckCircle size={20} />
-                      </motion.div>
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </motion.ul>
-                <motion.div variants={fadeInUp} className="mt-8">
-                  <Link
-                    href="/services"
-                    className="text-[#8a0faf] font-semibold hover:text-[#ff096c] transition-colors inline-flex items-center space-x-2"
-                  >
-                    <span>Learn More</span>
-                    <FaRocket size={16} />
-                  </Link>
-                </motion.div>
-              </motion.div>
-              <motion.div
-                variants={scaleIn}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white p-8 rounded-2xl shadow-xl"
-              >
-                <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
-                  <Image
-                    src="/images/lms-preview.jpg"
-                    alt="LMS Preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
         {/* Testimonials Section */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -760,78 +934,11 @@ const HomePage: React.FC = () => {
           </div>
         </section>
 
-        {/* Why Choose Us Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                Why Choose Us
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                We're committed to delivering excellence in every project we
-                undertake.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center group hover:bg-gradient-to-r hover:from-[#15181e] hover:to-[#4e10d3] p-8 rounded-xl transition-all"
-                >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    className="mb-4 inline-block p-4 bg-gray-50 rounded-full group-hover:bg-white/10 transition-colors"
-                  >
-                    <feature.icon
-                      className="text-[#8a0faf] group-hover:text-white transition-colors"
-                      size={32}
-                    />
-                  </motion.div>
-                  <motion.h3
-                    variants={fadeInUp}
-                    className="text-xl font-bold mb-3 group-hover:text-white transition-colors"
-                  >
-                    {feature.title}
-                  </motion.h3>
-                  <motion.p
-                    variants={fadeInUp}
-                    className="text-gray-600 group-hover:text-gray-200 transition-colors"
-                  >
-                    {feature.description}
-                  </motion.p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white relative overflow-hidden">
           <motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.1 }}
+            whileInView={{ opacity: 0.05 }}
             transition={{ duration: 1 }}
             className="absolute inset-0 bg-[url('/images/cta-pattern.svg')]"
           ></motion.div>
@@ -845,7 +952,7 @@ const HomePage: React.FC = () => {
             >
               <motion.h2
                 variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-6"
+                className="text-3xl md:text-4xl font-bold mb-6 text-white"
               >
                 Ready to Transform Your Business?
               </motion.h2>

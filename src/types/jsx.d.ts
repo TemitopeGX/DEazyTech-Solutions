@@ -1,126 +1,52 @@
-import { AriaAttributes, DOMAttributes } from "react";
-import React from "react";
-import { IconBaseProps } from "react-icons";
+import {
+  SVGProps,
+  HTMLAttributes,
+  DetailedHTMLProps,
+  MetaHTMLAttributes,
+} from "react";
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      div: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLDivElement>,
-        HTMLDivElement
-      >;
-      section: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-      nav: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-      main: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-      footer: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-      header: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >;
-      h1: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLHeadingElement>,
-        HTMLHeadingElement
-      >;
-      h2: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLHeadingElement>,
-        HTMLHeadingElement
-      >;
-      h3: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLHeadingElement>,
-        HTMLHeadingElement
-      >;
-      h4: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLHeadingElement>,
-        HTMLHeadingElement
-      >;
-      p: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLParagraphElement>,
-        HTMLParagraphElement
-      >;
-      span: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLSpanElement>,
-        HTMLSpanElement
-      >;
-      button: React.DetailedHTMLProps<
-        React.ButtonHTMLAttributes<HTMLButtonElement>,
-        HTMLButtonElement
-      >;
-      title: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLTitleElement>,
+      // SVG elements
+      svg: SVGProps<SVGSVGElement>;
+      path: SVGProps<SVGPathElement>;
+      circle: SVGProps<SVGCircleElement>;
+      rect: SVGProps<SVGRectElement>;
+      line: SVGProps<SVGLineElement>;
+      polyline: SVGProps<SVGPolylineElement>;
+      polygon: SVGProps<SVGPolygonElement>;
+
+      // HTML elements
+      div: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+      section: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
+      title: DetailedHTMLProps<
+        HTMLAttributes<HTMLTitleElement>,
         HTMLTitleElement
       >;
-      meta: React.DetailedHTMLProps<
-        React.MetaHTMLAttributes<HTMLMetaElement>,
+      meta: DetailedHTMLProps<
+        MetaHTMLAttributes<HTMLMetaElement>,
         HTMLMetaElement
       >;
-      ul: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLUListElement>,
-        HTMLUListElement
+      span: DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
+      h1: DetailedHTMLProps<
+        HTMLAttributes<HTMLHeadingElement>,
+        HTMLHeadingElement
       >;
-      li: React.DetailedHTMLProps<
-        React.LiHTMLAttributes<HTMLLIElement>,
-        HTMLLIElement
+      h2: DetailedHTMLProps<
+        HTMLAttributes<HTMLHeadingElement>,
+        HTMLHeadingElement
       >;
-      a: React.DetailedHTMLProps<
-        React.AnchorHTMLAttributes<HTMLAnchorElement>,
-        HTMLAnchorElement
+      h3: DetailedHTMLProps<
+        HTMLAttributes<HTMLHeadingElement>,
+        HTMLHeadingElement
       >;
-      br: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLBRElement>,
-        HTMLBRElement
+      p: DetailedHTMLProps<
+        HTMLAttributes<HTMLParagraphElement>,
+        HTMLParagraphElement
       >;
-      img: React.DetailedHTMLProps<
-        React.ImgHTMLAttributes<HTMLImageElement>,
-        HTMLImageElement
-      >;
-      form: React.DetailedHTMLProps<
-        React.FormHTMLAttributes<HTMLFormElement>,
-        HTMLFormElement
-      >;
-      label: React.DetailedHTMLProps<
-        React.LabelHTMLAttributes<HTMLLabelElement>,
-        HTMLLabelElement
-      >;
-      select: React.DetailedHTMLProps<
-        React.SelectHTMLAttributes<HTMLSelectElement>,
-        HTMLSelectElement
-      >;
-      option: React.DetailedHTMLProps<
-        React.OptionHTMLAttributes<HTMLOptionElement>,
-        HTMLOptionElement
-      >;
-      textarea: React.DetailedHTMLProps<
-        React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-        HTMLTextAreaElement
-      >;
-      input: React.DetailedHTMLProps<
-        React.InputHTMLAttributes<HTMLInputElement>,
-        HTMLInputElement
-      >;
+      ul: DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>;
+      li: DetailedHTMLProps<HTMLAttributes<HTMLLIElement>, HTMLLIElement>;
     }
-  }
-}
-
-declare module "react-icons" {
-  interface IconBaseProps {
-    className?: string;
-  }
-}
-
-declare module "react" {
-  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    input?: string;
   }
 }
