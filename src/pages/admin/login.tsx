@@ -123,7 +123,7 @@ const AdminLogin = () => {
                 />
                 {errors.email && touched.email && (
                   <div className="text-red-600 text-sm mt-1">
-                    {errors.email}
+                    {errors.email as string}
                   </div>
                 )}
               </div>
@@ -144,7 +144,7 @@ const AdminLogin = () => {
                 />
                 {errors.password && touched.password && (
                   <div className="text-red-600 text-sm mt-1">
-                    {errors.password}
+                    {errors.password as string}
                   </div>
                 )}
               </div>
