@@ -42,7 +42,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <Image
-              src="/images/logo-2.png"
+              src="/images/logo-white.png"
               alt="DEAZY Tech Solutions"
               width={150}
               height={40}

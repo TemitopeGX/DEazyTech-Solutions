@@ -1,987 +1,886 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import CircularText from "../components/CircularText";
-import { motion } from "framer-motion";
-import {
-  FaCode,
-  FaMobile,
-  FaLaptopCode,
-  FaTools,
-  FaRocket,
-  FaCheckCircle,
-  FaClock,
-  FaShieldAlt,
-  FaGlobe,
-  FaUserGraduate,
-  FaStore,
-  FaIndustry,
-  FaChartLine,
-  FaAward,
-  FaStar,
-  FaQuoteLeft,
-} from "react-icons/fa";
-import { IconType } from "react-icons";
-
-interface Service {
-  icon: IconType;
-  title: string;
-  description: string;
-  features: string[];
-}
-
-interface Feature {
-  icon: IconType;
-  title: string;
-  description: string;
-}
-
-interface Industry {
-  icon: IconType;
-  title: string;
-  description: string;
-}
-
-interface Testimonial {
-  name: string;
-  role: string;
-  company: string;
-  image: string;
-  content: string;
-  rating: number;
-}
 
 const HomePage: React.FC = () => {
-  // Animation variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const staggerChildren = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const scaleIn = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-      },
-    },
-  };
-
-  const slideIn = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-      },
-    },
-  };
-
-  const services: Service[] = [
-    {
-      icon: FaCode,
-      title: "Software Development",
-      description:
-        "Custom software solutions that drive business growth and efficiency.",
-      features: [
-        "Learning Management Systems",
-        "Enterprise Applications",
-        "eCommerce Platforms",
-        "Custom Software",
-        "API Integration",
-      ],
-    },
-    {
-      icon: FaMobile,
-      title: "Mobile App Development",
-      description:
-        "Native and cross-platform mobile solutions for modern businesses.",
-      features: [
-        "iOS Development",
-        "Android Development",
-        "React Native",
-        "Flutter",
-        "Mobile UI/UX",
-      ],
-    },
-    {
-      icon: FaLaptopCode,
-      title: "Web Development",
-      description:
-        "High-performance websites and web applications that deliver results.",
-      features: ["React.js", "Next.js", "Node.js", "PHP/Laravel", "WordPress"],
-    },
-    {
-      icon: FaTools,
-      title: "IT Consulting",
-      description:
-        "Strategic technology advice to optimize your business operations.",
-      features: [
-        "Digital Strategy",
-        "Process Automation",
-        "System Integration",
-        "Tech Architecture",
-        "Cloud Solutions",
-      ],
-    },
-  ];
-
-  const features: Feature[] = [
-    {
-      icon: FaCheckCircle,
-      title: "Expertise & Experience",
-      description:
-        "Proven track record in delivering high-quality, scalable, and secure digital solutions.",
-    },
-    {
-      icon: FaTools,
-      title: "Tailor-Made Solutions",
-      description:
-        "Customer-focused approach ensuring solutions customized to meet your specific needs.",
-    },
-    {
-      icon: FaClock,
-      title: "Reliable Support",
-      description:
-        "24/7 technical support, system updates, and ongoing maintenance for smooth performance.",
-    },
-    {
-      icon: FaShieldAlt,
-      title: "Secure & Scalable",
-      description:
-        "Systems built with robust security measures and scalability for business growth.",
-    },
-  ];
-
-  const industries: Industry[] = [
-    {
-      icon: FaUserGraduate,
-      title: "Education",
-      description:
-        "Transforming learning with digital solutions and LMS platforms.",
-    },
-    {
-      icon: FaStore,
-      title: "Retail & E-commerce",
-      description:
-        "Building seamless shopping experiences and management systems.",
-    },
-    {
-      icon: FaIndustry,
-      title: "Manufacturing",
-      description: "Automating processes and improving operational efficiency.",
-    },
-    {
-      icon: FaGlobe,
-      title: "Technology",
-      description: "Developing cutting-edge solutions for tech companies.",
-    },
-  ];
-
-  const testimonials: Testimonial[] = [
-    {
-      name: "John Smith",
-      role: "CEO",
-      company: "TechCorp Inc.",
-      image: "/images/testimonials/john.jpg",
-      content:
-        "DEAZY Tech delivered an exceptional e-commerce platform that exceeded our expectations. Their team's expertise and dedication were impressive.",
-      rating: 5,
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Director",
-      company: "EduTech Solutions",
-      image: "/images/testimonials/sarah.jpg",
-      content:
-        "The LMS they developed revolutionized our online learning program. Great team, great results!",
-      rating: 5,
-    },
-    {
-      name: "Michael Chen",
-      role: "CTO",
-      company: "Innovation Labs",
-      image: "/images/testimonials/michael.jpg",
-      content:
-        "Their technical expertise and project management made our digital transformation smooth and successful.",
-      rating: 5,
-    },
-  ];
-
-  const projects = [
-    {
-      id: 1,
-      title: "Learning Management System",
-      description:
-        "A comprehensive LMS platform with live classes, assessments, and student tracking.",
-      image: "/images/projects/lms-preview.jpg",
-      tags: ["Next.js", "React", "Node.js", "MongoDB"],
-      link: "#",
-    },
-    {
-      id: 2,
-      title: "E-commerce Platform",
-      description:
-        "Modern e-commerce solution with real-time inventory and payment processing.",
-      image: "/images/projects/ecommerce.jpg",
-      tags: ["React", "Node.js", "Stripe", "PostgreSQL"],
-      link: "#",
-    },
-  ];
+  // Auto-scroll logic for services carousel
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    let direction: "right" | "left" = "right";
+    let frame: number;
+    function autoScroll() {
+      if (!el) return;
+      if (direction === "right") {
+        el.scrollLeft += 1;
+        if (el.scrollLeft + el.offsetWidth >= el.scrollWidth)
+          direction = "left";
+      } else {
+        el.scrollLeft -= 1;
+        if (el.scrollLeft <= 0) direction = "right";
+      }
+      frame = requestAnimationFrame(autoScroll);
+    }
+    frame = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   return (
     <>
       <Head>
-        <title>
-          DEAZY Tech Solutions - Custom Software Development Company
-        </title>
+        <title>DEAZY Tech Solutions - Custom Software Development</title>
         <meta
           name="description"
-          content="Transform your business with custom software solutions. We specialize in web development, mobile apps, and enterprise solutions."
-        />
-
-        {/* Open Graph */}
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content="DEAZY Tech Solutions - Custom Software Development Company"
-        />
-        <meta
-          property="og:description"
-          content="Transform your business with custom software solutions. We specialize in web development, mobile apps, and enterprise solutions."
-        />
-        <meta
-          property="og:image"
-          content="/favicon/android-chrome-512x512.png"
+          content="Empowering Business Growth with Innovative Software. DEAZY Tech Solutions delivers custom, secure, and scalable digital platforms for organizations."
         />
       </Head>
-
-      <div className="min-h-screen bg-white">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/images/hero-pattern.svg')] opacity-5"></div>
-          <div className="container mx-auto px-4 relative">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={staggerChildren}
-              >
-                <motion.h1
-                  variants={fadeInUp}
-                  className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
-                >
-                  Transform Your Business with{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
-                    Innovative
-                  </span>{" "}
-                  Solutions
-                </motion.h1>
-                <motion.p
-                  variants={fadeInUp}
-                  className="text-xl text-gray-200 mb-8"
-                >
-                  We develop cutting-edge digital solutions that drive success.
-                  From custom software to mobile apps, we're your partner in
-                  digital transformation.
-                </motion.p>
-                <motion.div
-                  variants={fadeInUp}
-                  className="flex flex-wrap gap-4"
-                >
-                  <Link
-                    href="/start-project"
-                    className="px-8 py-4 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full text-white font-semibold hover:opacity-90 transition-opacity inline-flex items-center space-x-2"
-                  >
-                    <FaRocket size={20} />
-                    <span>Start Your Project</span>
-                  </Link>
-                  <Link
-                    href="/services"
-                    className="px-8 py-4 bg-white text-gray-900 rounded-full font-semibold hover:bg-gray-100 transition-colors"
-                  >
-                    Explore Services
-                  </Link>
-                </motion.div>
-                <motion.div
-                  variants={fadeInUp}
-                  className="mt-12 flex items-center gap-8"
-                >
-                  <div className="flex items-center">
-                    <FaAward className="text-[#ff096c] mr-2" size={24} />
-                    <span>5+ Years Experience</span>
-                  </div>
-                  <div className="flex items-center">
-                    <FaChartLine className="text-[#ff096c] mr-2" size={24} />
-                    <span>100+ Projects Delivered</span>
-                  </div>
-                </motion.div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, type: "spring" }}
-                className="relative"
-              >
-                <div className="relative w-full h-[400px]">
-                  <Image
-                    src="/images/hero-tech-solutions.svg"
-                    alt="DEAZY Tech Solutions - Software Development, Mobile Apps, Web Development, and Digital Transformation Services"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
-                  <div className="absolute top-[95%] right-[10%] transform -translate-y-1/2 z-10 hidden md:block">
-                    <CircularText
-                      text="INNOVATION*EXCELLENCE*GROWTH*"
-                      onHover="speedUp"
-                      spinDuration={25}
-                      className="opacity-90 hover:opacity-100 transition-opacity w-[220px] h-[220px] text-2xl bg-gradient-to-r from-[#15181e]/50 to-[#4e10d3]/50 rounded-full backdrop-blur-sm"
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Services Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                Our Services
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                We offer comprehensive software solutions to help your business
-                grow and succeed in the digital age.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {services.map((service, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-100 group hover:border-[#8a0faf]"
-                >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                    className="mb-4 text-[#8a0faf]"
-                  >
-                    <service.icon size={40} />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-                  <p className="text-gray-600 mb-4">{service.description}</p>
-                  <motion.ul variants={staggerChildren} className="space-y-2">
-                    {service.features.map((feature, idx) => (
-                      <motion.li
-                        key={idx}
-                        variants={fadeInUp}
-                        className="flex items-center text-gray-600"
-                      >
-                        <FaCheckCircle
-                          className="text-[#ff096c] mr-2"
-                          size={14}
-                        />
-                        <span>{feature}</span>
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Recent Projects Section */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerChildren}
-          className="py-20 bg-white"
-        >
-          <div className="container mx-auto px-4">
-            <motion.div variants={fadeInUp} className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 text-gray-800">
-                Recent Projects
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Explore our latest work and see how we help businesses transform
-                their digital presence
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              {projects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  variants={fadeInUp}
-                  className="bg-white rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 border border-gray-100"
-                >
-                  <div className="relative h-64">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold mb-2 text-gray-800">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <Link
-                      href={project.link}
-                      className="inline-block bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity duration-300"
-                    >
-                      View Project
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div variants={fadeInUp} className="text-center">
+      {/* Hero Section - EduGram style */}
+      <section className="relative min-h-[80vh] flex items-center bg-gradient-to-br from-[#f5f6fa] to-[#e9eafc] overflow-hidden border-b border-gray-100">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 py-16">
+          {/* Left: Text */}
+          <div className="flex-1 flex flex-col items-start justify-center max-w-xl">
+            <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-gray-900">
+              Empower Your <span className="text-[#ff096c]">Business</span> with
+              the <span className="text-[#8a0faf]">Future</span> of{" "}
+              <span className="text-[#4e10d3]">Software</span>
+            </h1>
+            <p className="text-base md:text-lg text-gray-600 mb-8">
+              DEAZY Tech Solutions delivers world-class custom software, web,
+              and mobile solutions, helping organizations grow and innovate in a
+              digital world.
+            </p>
+            <div className="flex flex-wrap gap-4 mb-8">
               <Link
-                href="/recent-projects"
-                className="inline-flex items-center justify-center px-8 py-3 text-lg font-medium text-white bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full hover:opacity-90 transition-opacity"
+                href="/start-project"
+                className="px-7 py-3 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full text-white font-semibold shadow-md hover:opacity-90 transition-all"
               >
-                View All Projects
+                Start Your Project
+              </Link>
+              <Link
+                href="/contact"
+                className="px-7 py-3 border-2 border-[#8a0faf] rounded-full text-[#8a0faf] font-semibold hover:bg-[#8a0faf] hover:text-white transition-all"
+              >
+                Contact Us
+              </Link>
+            </div>
+            <div className="flex gap-8 mt-2">
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-[#15181e]">
+                  100+
+                </div>
+                <div className="text-xs text-gray-500">Projects Delivered</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-[#15181e]">
+                  5+
+                </div>
+                <div className="text-xs text-gray-500">Years Experience</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-[#15181e]">
+                  24/7
+                </div>
+                <div className="text-xs text-gray-500">Support</div>
+              </div>
+            </div>
+          </div>
+          {/* Right: Hero Image */}
+          <div className="flex-1 flex justify-center items-center relative min-w-[340px] md:min-w-[480px]">
+            <div className="rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white md:-ml-16 -ml-6">
+              <Image
+                src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80"
+                alt="Programmer at work"
+                width={520}
+                height={600}
+                className="object-cover w-[340px] h-[400px] md:w-[520px] md:h-[600px]"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Services Section - Clean Grid Layout */}
+      <section className="py-24 bg-[#f8f9fd]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#ff096c] font-medium">
+              Services we offer
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              Our Services
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              We deliver a full spectrum of digital solutions to help your
+              business grow and succeed in a digital world.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-8">
+            {/* Software Development */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
                 <svg
-                  className="w-5 h-5 ml-2"
-                  fill="none"
-                  stroke="currentColor"
+                  width="1.8em"
+                  height="1.8em"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
+                  fill="none"
                 >
                   <path
+                    d="M4 17V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                  <path
+                    d="M8 21h8M12 17v4"
+                    stroke="#ff096c"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
-              </Link>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* Why Choose Us Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                Why Choose Us
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                We're committed to delivering excellence in every project we
-                undertake.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center group hover:bg-gradient-to-r hover:from-[#15181e] hover:to-[#4e10d3] p-8 rounded-xl transition-all"
+              </span>
+              <h3 className="text-xl font-bold mb-3">Software Development</h3>
+              <p className="text-gray-600 text-base">
+                Custom software, LMS, eCommerce, enterprise apps, and automation
+                tools.
+              </p>
+            </div>
+            {/* Mobile App Development */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    className="mb-4 inline-block p-4 bg-gray-50 rounded-full group-hover:bg-white/10 transition-colors"
-                  >
-                    <feature.icon
-                      className="text-[#8a0faf] group-hover:text-white transition-colors"
-                      size={32}
-                    />
-                  </motion.div>
-                  <motion.h3
-                    variants={fadeInUp}
-                    className="text-xl font-bold mb-3 group-hover:text-white transition-colors"
-                  >
-                    {feature.title}
-                  </motion.h3>
-                  <motion.p
-                    variants={fadeInUp}
-                    className="text-gray-600 group-hover:text-gray-200 transition-colors"
-                  >
-                    {feature.description}
-                  </motion.p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Featured Project Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            >
-              <motion.div variants={slideIn}>
-                <motion.span
-                  variants={fadeInUp}
-                  className="text-[#ff096c] font-semibold mb-2 block"
-                >
-                  Featured Project
-                </motion.span>
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-3xl md:text-4xl font-bold mb-6"
-                >
-                  Learning Management System
-                </motion.h2>
-                <motion.p variants={fadeInUp} className="text-gray-600 mb-6">
-                  Our flagship LMS solution powers educational institutions and
-                  corporate training programs with cutting-edge features.
-                </motion.p>
-                <motion.ul variants={staggerChildren} className="space-y-4">
-                  {[
-                    "Web Dashboard for centralized management",
-                    "Tutor & Student mobile apps",
-                    "Live & pre-recorded sessions",
-                    "Automated assessments & certification",
-                    "Payment gateway integration",
-                    "Progress tracking & analytics",
-                  ].map((feature, index) => (
-                    <motion.li
-                      key={index}
-                      variants={fadeInUp}
-                      className="flex items-center space-x-3 text-gray-700"
-                    >
-                      <motion.div
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.2, rotate: 360 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-[#8a0faf]"
-                      >
-                        <FaCheckCircle size={20} />
-                      </motion.div>
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </motion.ul>
-                <motion.div variants={fadeInUp} className="mt-8">
-                  <Link
-                    href="/services"
-                    className="text-[#8a0faf] font-semibold hover:text-[#ff096c] transition-colors inline-flex items-center space-x-2"
-                  >
-                    <span>Learn More</span>
-                    <FaRocket size={16} />
-                  </Link>
-                </motion.div>
-              </motion.div>
-              <motion.div
-                variants={scaleIn}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white p-8 rounded-2xl shadow-xl"
-              >
-                <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
-                  <Image
-                    src="/images/lms-preview.jpg"
-                    alt="LMS Preview"
-                    fill
-                    className="object-cover"
+                  <rect
+                    x="7"
+                    y="2"
+                    width="10"
+                    height="20"
+                    rx="2"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
                   />
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section className="py-16 bg-white relative">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={staggerChildren}
-              >
-                <motion.span
-                  variants={slideIn}
-                  className="text-[#ff096c] font-semibold mb-2 block"
+                  <circle cx="12" cy="18" r="1" fill="#ff096c" />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">Mobile App Development</h3>
+              <p className="text-gray-600 text-base">
+                Native and cross-platform apps for Android and iOS.
+              </p>
+            </div>
+            {/* Web Development */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  About Us
-                </motion.span>
-                <motion.h2
-                  variants={slideIn}
-                  className="text-3xl md:text-4xl font-bold mb-6"
+                  <rect
+                    x="3"
+                    y="4"
+                    width="18"
+                    height="16"
+                    rx="2"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
+                  />
+                  <path d="M3 8h18" stroke="#ff096c" strokeWidth="2" />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">Web Development</h3>
+              <p className="text-gray-600 text-base">
+                High-performance websites and web apps focused on security and
+                UX.
+              </p>
+            </div>
+            {/* IT Consulting & Digital Transformation */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  Leading Software Development Company
-                </motion.h2>
-                <motion.p
-                  variants={slideIn}
-                  className="text-gray-600 mb-6 text-lg"
+                  <path
+                    d="M12 20v-6M12 4v2M4 12h2m12 0h2M7.76 7.76l1.42 1.42M16.24 16.24l1.42 1.42M7.76 16.24l1.42-1.42M16.24 7.76l1.42-1.42"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
+                  />
+                  <circle cx="12" cy="12" r="3" fill="#ff096c" />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">
+                IT Consulting & Digital Transformation
+              </h3>
+              <p className="text-gray-600 text-base">
+                Expert advice and solutions to automate and optimize your
+                operations.
+              </p>
+            </div>
+            {/* Support & Maintenance */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  DEAZY Tech Solutions Limited is a leading software development
-                  company specializing in cutting-edge digital solutions for
-                  businesses, institutions, and organizations. With a strong
-                  background in web and mobile app development, we provide
-                  custom, scalable, and high-performance solutions that drive
-                  success.
-                </motion.p>
-                <motion.div
-                  variants={staggerChildren}
-                  className="grid grid-cols-2 gap-6 mb-8"
+                  <path
+                    d="M12 20v-4M8 20v-4M16 20v-4M4 8V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
+                  />
+                  <rect
+                    x="4"
+                    y="8"
+                    width="16"
+                    height="12"
+                    rx="2"
+                    stroke="#ff096c"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">Support & Maintenance</h3>
+              <p className="text-gray-600 text-base">
+                Ongoing support, updates, and troubleshooting for smooth
+                performance.
+              </p>
+            </div>
+            {/* UI/UX Design */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  <motion.div
-                    variants={scaleIn}
-                    whileHover={{ scale: 1.05 }}
-                    className="bg-gray-50 p-4 rounded-lg"
-                  >
-                    <div className="text-[#8a0faf] mb-2">
-                      <FaCheckCircle size={24} />
-                    </div>
-                    <h3 className="font-semibold mb-1">Our Vision</h3>
-                    <p className="text-gray-600 text-sm">
-                      To be a leading provider of innovative technology
-                      solutions that empower businesses worldwide.
-                    </p>
-                  </motion.div>
-                  <motion.div
-                    variants={scaleIn}
-                    whileHover={{ scale: 1.05 }}
-                    className="bg-gray-50 p-4 rounded-lg"
-                  >
-                    <div className="text-[#8a0faf] mb-2">
-                      <FaRocket size={24} />
-                    </div>
-                    <h3 className="font-semibold mb-1">Our Mission</h3>
-                    <p className="text-gray-600 text-sm">
-                      To develop custom software solutions that improve
-                      efficiency and drive business growth.
-                    </p>
-                  </motion.div>
-                </motion.div>
-                <motion.div variants={fadeInUp}>
-                  <Link
-                    href="/about"
-                    className="text-[#8a0faf] font-semibold hover:text-[#ff096c] transition-colors inline-flex items-center space-x-2"
-                  >
-                    <span>Learn More About Us</span>
-                    <FaRocket size={16} />
-                  </Link>
-                </motion.div>
-              </motion.div>
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={scaleIn}
-                className="relative"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-gradient-to-r from-[#15181e] to-[#4e10d3] rounded-2xl p-8 text-white"
+                  <rect
+                    x="4"
+                    y="4"
+                    width="16"
+                    height="16"
+                    rx="4"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
+                  />
+                  <circle cx="12" cy="12" r="4" fill="#ff096c" />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">UI/UX Design</h3>
+              <p className="text-gray-600 text-base">
+                Intuitive and engaging user interface and experience design for
+                web and mobile apps.
+              </p>
+            </div>
+            {/* Cloud Solutions */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-                  <div className="grid grid-cols-2 gap-6">
-                    <motion.div variants={fadeInUp} className="text-center">
-                      <div className="text-4xl font-bold mb-2">5+</div>
-                      <div className="text-sm text-gray-200">
-                        Years Experience
-                      </div>
-                    </motion.div>
-                    <motion.div variants={fadeInUp} className="text-center">
-                      <div className="text-4xl font-bold mb-2">100+</div>
-                      <div className="text-sm text-gray-200">
-                        Projects Delivered
-                      </div>
-                    </motion.div>
-                    <motion.div variants={fadeInUp} className="text-center">
-                      <div className="text-4xl font-bold mb-2">50+</div>
-                      <div className="text-sm text-gray-200">Happy Clients</div>
-                    </motion.div>
-                    <motion.div variants={fadeInUp} className="text-center">
-                      <div className="text-4xl font-bold mb-2">24/7</div>
-                      <div className="text-sm text-gray-200">
-                        Support Available
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-                <div className="absolute -top-4 -right-4 -bottom-4 -left-4 bg-[url('/images/hero-pattern.svg')] opacity-5 rounded-2xl"></div>
-              </motion.div>
+                  <path
+                    d="M6 18a4 4 0 1 1 0-8 5.5 5.5 0 0 1 10.9 1.5A4.5 4.5 0 1 1 18 18H6z"
+                    stroke="#8a0faf"
+                    strokeWidth="2"
+                    fill="#ff096c"
+                  />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">Cloud Solutions</h3>
+              <p className="text-gray-600 text-base">
+                Scalable cloud infrastructure, migration, and integration for
+                modern businesses.
+              </p>
+            </div>
+            {/* Digital Marketing */}
+            <div className="bg-white rounded-3xl shadow-lg p-10 border border-gray-100 flex flex-col items-center text-center h-full transition-all hover:shadow-2xl min-h-[320px] min-w-[300px] max-w-[400px] mx-auto">
+              <span className="text-5xl mb-6 text-[#8a0faf]">
+                <svg
+                  width="1.8em"
+                  height="1.8em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path d="M4 4h16v16H4z" stroke="#8a0faf" strokeWidth="2" />
+                  <path d="M8 12h8M8 16h5" stroke="#ff096c" strokeWidth="2" />
+                  <circle cx="8" cy="8" r="1.5" fill="#ff096c" />
+                </svg>
+              </span>
+              <h3 className="text-xl font-bold mb-3">Digital Marketing</h3>
+              <p className="text-gray-600 text-base">
+                Online marketing, SEO, and social media strategies to grow your
+                brand.
+              </p>
             </div>
           </div>
-        </section>
-
-        {/* Industries Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                Industries We Serve
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                Our expertise spans across various industries, delivering
-                tailored solutions for specific business needs.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {industries.map((industry, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{
-                    scale: 1.05,
-                    transition: { duration: 0.2 },
-                  }}
-                  className="p-6 bg-white rounded-xl shadow-lg text-center group hover:bg-gradient-to-r hover:from-[#15181e] hover:to-[#4e10d3] transition-all"
-                >
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                    className="mb-4 text-[#8a0faf] group-hover:text-white transition-colors"
-                  >
-                    <industry.icon size={40} />
-                  </motion.div>
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors">
-                    {industry.title}
-                  </h3>
-                  <p className="text-gray-600 group-hover:text-gray-200 transition-colors">
-                    {industry.description}
-                  </p>
-                </motion.div>
-              ))}
-            </motion.div>
+        </div>
+      </section>
+      {/* Trusted By Companies Section - Continuous Scrolling Logos (Online Images) */}
+      <section className="py-14 bg-white border-t border-b border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium">
+              Trusted by leading companies
+            </span>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Our Clients & Partners
+            </h3>
           </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-4"
-              >
-                What Our Clients Say
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-600 max-w-2xl mx-auto"
-              >
-                Don't just take our word for it. Here's what our clients have to
-                say about their experience working with us.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            >
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ y: -10 }}
-                  className="bg-white p-8 rounded-xl shadow-lg relative"
-                >
-                  <motion.div
-                    initial={{ opacity: 0.1, scale: 1 }}
-                    whileHover={{ opacity: 0.2, scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FaQuoteLeft
-                      className="text-[#ff096c] absolute top-4 left-4"
-                      size={40}
+          <div className="relative overflow-hidden w-full">
+            <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
+              {/* Online logo images */}
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
+                alt="Google"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+                alt="Microsoft"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
+                alt="Slack"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                alt="IBM"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+                alt="Amazon"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              {/* Repeat for infinite effect */}
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
+                alt="Google"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+                alt="Microsoft"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
+                alt="Slack"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                alt="IBM"
+                className="h-12 w-auto object-contain transition-all"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+                alt="Amazon"
+                className="h-12 w-auto object-contain transition-all"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Tech Stack Section with Tabs */}
+      <section className="py-14 bg-[#f8f9fd] border-b border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#4e10d3] font-medium">
+              Tech Stack
+            </span>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Technologies We Use
+            </h3>
+          </div>
+          {/* Tabs */}
+          {(() => {
+            const tabs = [
+              { label: "Frontend", key: "frontend" },
+              { label: "Backend", key: "backend" },
+              { label: "Database", key: "database" },
+              { label: "Tools", key: "tools" },
+              { label: "Design", key: "design" },
+            ];
+            const logos = {
+              frontend: [
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+                  alt: "React",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+                  alt: "Next.js",
+                  extra: "bg-white rounded-lg p-2",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
+                  alt: "Vue.js",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
+                  alt: "Angular",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+                  alt: "JavaScript",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+                  alt: "TypeScript",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+                  alt: "HTML5",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+                  alt: "CSS3",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
+                  alt: "Tailwind CSS",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
+                  alt: "Bootstrap",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg",
+                  alt: "Material UI",
+                },
+              ],
+              backend: [
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+                  alt: "Node.js",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+                  alt: "Express.js",
+                  extra: "bg-white rounded-lg p-2",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg",
+                  alt: "NestJS",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+                  alt: "Python",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
+                  alt: "Django",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+                  alt: "PHP",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg",
+                  alt: "Laravel",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+                  alt: "Java",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
+                  alt: "Go",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg",
+                  alt: "Ruby",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+                  alt: "Swift",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+                  alt: "Kotlin",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg",
+                  alt: "Dart",
+                },
+              ],
+              database: [
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+                  alt: "MySQL",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+                  alt: "MongoDB",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+                  alt: "PostgreSQL",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
+                  alt: "Redis",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
+                  alt: "SQLite",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+                  alt: "Firebase",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg",
+                  alt: "MariaDB",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg",
+                  alt: "Oracle",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
+                  alt: "SQL Server",
+                },
+              ],
+              tools: [
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+                  alt: "Git",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+                  alt: "GitHub",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg",
+                  alt: "GitLab",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
+                  alt: "VS Code",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg",
+                  alt: "Webpack",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+                  alt: "Docker",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
+                  alt: "Kubernetes",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg",
+                  alt: "AWS",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg",
+                  alt: "Google Cloud",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
+                  alt: "Azure",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
+                  alt: "Jenkins",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg",
+                  alt: "ESLint",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/babel/babel-original.svg",
+                  alt: "Babel",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/heroku/heroku-original.svg",
+                  alt: "Heroku",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg",
+                  alt: "Jest",
+                },
+              ],
+              design: [
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+                  alt: "Figma",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sketch/sketch-original.svg",
+                  alt: "Sketch",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobephotoshop/adobephotoshop-plain.svg",
+                  alt: "Photoshop",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobexd/adobexd-plain.svg",
+                  alt: "Adobe XD",
+                },
+                {
+                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobeillustrator/adobeillustrator-plain.svg",
+                  alt: "Illustrator",
+                },
+              ],
+            } as const;
+            const [activeTab, setActiveTab] =
+              useState<keyof typeof logos>("frontend");
+            return (
+              <>
+                <div className="flex flex-wrap justify-center gap-4 mb-10">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() =>
+                        setActiveTab(tab.key as keyof typeof logos)
+                      }
+                      className={`px-6 py-2 rounded-full font-semibold border transition-all text-base md:text-lg focus:outline-none ${
+                        activeTab === tab.key
+                          ? "bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white shadow-md"
+                          : "bg-white text-[#4e10d3] border-[#8a0faf] hover:bg-[#f3eafd]"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 min-w-[320px]">
+                  {[...logos[activeTab]].map((logo: any, idx: number) => (
+                    <img
+                      key={logo.alt + idx}
+                      src={logo.src}
+                      alt={logo.alt}
+                      className={`h-12 w-auto object-contain ${
+                        "extra" in logo ? logo.extra : ""
+                      }`}
                     />
-                  </motion.div>
-                  <motion.div
-                    variants={fadeInUp}
-                    className="flex items-center mb-6"
-                  >
-                    <div className="w-16 h-16 relative rounded-full overflow-hidden mr-4">
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">{testimonial.name}</h3>
-                      <p className="text-gray-600">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
-                    </div>
-                  </motion.div>
-                  <motion.p variants={fadeInUp} className="text-gray-600 mb-4">
-                    {testimonial.content}
-                  </motion.p>
-                  <motion.div
-                    variants={staggerChildren}
-                    className="flex text-[#ff096c]"
-                  >
-                    {Array.from({ length: testimonial.rating }).map((_, i) => (
-                      <motion.span
-                        key={i}
-                        variants={fadeInUp}
-                        whileHover={{ scale: 1.2, rotate: 180 }}
-                        className="mr-1"
-                      >
-                        <FaStar size={16} />
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
+                  ))}
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      </section>
+      {/* Development & Design Approach Section - Horizontal Stepper */}
+      <section className="py-20 bg-white border-b border-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium">
+              Our Process
+            </span>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Our Development & Design Approach
+            </h3>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              We follow a proven, collaborative process to deliver high-quality,
+              user-focused digital solutions.
+            </p>
           </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white relative overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.05 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0 bg-[url('/images/cta-pattern.svg')]"
-          ></motion.div>
-          <div className="container mx-auto px-4 relative">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-3xl md:text-4xl font-bold mb-6 text-white"
+          <div className="flex flex-col md:flex-row items-start md:items-stretch justify-between gap-10 md:gap-0 relative">
+            {/* Connecting line for horizontal stepper */}
+            <div
+              className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[#ff096c]/20 to-[#8a0faf]/20 z-0"
+              style={{ transform: "translateY(-50%)" }}
+            />
+            {[
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <path
+                      d="M8 12h8M12 8v8"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                ),
+                title: "Discovery & Consultation",
+                desc: "We start by understanding your business goals, challenges, and requirements through in-depth consultation.",
+              },
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <path
+                      d="M7 17l5-5 5 5"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ),
+                title: "Planning & Strategy",
+                desc: "Our team crafts a tailored project plan, defining milestones, deliverables, and timelines for success.",
+              },
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <rect
+                      x="8"
+                      y="8"
+                      width="8"
+                      height="8"
+                      rx="2"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                ),
+                title: "UI/UX Design",
+                desc: "We create intuitive, engaging designs focused on user experience and your brand identity.",
+              },
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <path
+                      d="M8 16l4-8 4 8"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ),
+                title: "Development",
+                desc: "Our engineers build robust, scalable solutions using the latest technologies and best practices.",
+              },
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <path
+                      d="M9 12l2 2 4-4"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ),
+                title: "Testing & Quality Assurance",
+                desc: "Comprehensive testing ensures your product is secure, reliable, and ready for launch.",
+              },
+              {
+                icon: (
+                  <svg width="36" height="36" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#8a0faf"
+                      strokeWidth="2"
+                      fill="#f3eafd"
+                    />
+                    <path
+                      d="M12 8v4l3 3"
+                      stroke="#ff096c"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ),
+                title: "Deployment & Support",
+                desc: "We launch your solution and provide ongoing support and maintenance for continuous improvement.",
+              },
+            ].map((step, idx, arr) => (
+              <div
+                key={step.title}
+                className="relative z-10 flex-1 flex flex-col items-center text-center px-2 md:px-4 mb-10 md:mb-0"
               >
-                Ready to Transform Your Business?
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-xl text-gray-200 mb-8"
-              >
-                Let's discuss your project and create a solution that drives
-                your business forward.
-              </motion.p>
-              <motion.div variants={scaleIn} whileHover={{ scale: 1.05 }}>
-                <Link
-                  href="/start-project"
-                  className="px-8 py-4 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full text-white font-semibold hover:opacity-90 transition-opacity inline-flex items-center space-x-2"
-                >
-                  <motion.div
-                    initial={{ rotate: 0 }}
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <FaRocket size={20} />
-                  </motion.div>
-                  <span>Start Your Project</span>
-                </Link>
-              </motion.div>
-            </motion.div>
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg border-2 border-[#e9eafc] mb-4 relative z-10">
+                  {step.icon}
+                </div>
+                <h4 className="text-lg font-bold text-gray-900 mb-2">
+                  {step.title}
+                </h4>
+                <p className="text-gray-600 text-sm mb-0">{step.desc}</p>
+                {/* Vertical line for mobile */}
+                {idx < arr.length - 1 && (
+                  <div
+                    className="block md:hidden absolute left-1/2 top-full w-1 h-10 bg-gradient-to-b from-[#ff096c]/20 to-[#8a0faf]/20"
+                    style={{ transform: "translateX(-50%)" }}
+                  />
+                )}
+              </div>
+            ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+      <style jsx global>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+      `}</style>
     </>
   );
 };
