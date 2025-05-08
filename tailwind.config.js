@@ -29,54 +29,11 @@ module.exports = {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },
         },
-        blob1: {
-          "0%": {
-            transform: "translate(0, 0) scale(1)",
-          },
-          "33%": {
-            transform: "translate(30px, -50px) scale(1.1)",
-          },
-          "66%": {
-            transform: "translate(-20px, 20px) scale(0.9)",
-          },
-        },
-        blob2: {
-          "0%": {
-            transform: "translate(0, 0) scale(1)",
-          },
-          "33%": {
-            transform: "translate(-30px, 50px) scale(0.9)",
-          },
-          "66%": {
-            transform: "translate(20px, -20px) scale(1.1)",
-          },
-        },
-        blob3: {
-          "0%": {
-            transform: "translate(0, 0) scale(1)",
-          },
-          "33%": {
-            transform: "translate(-50px, -30px) scale(1.1)",
-          },
-          "66%": {
-            transform: "translate(20px, 40px) scale(0.9)",
-          },
-        },
-        scroll: {
-          "0%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(31px)" },
-          "100%": { transform: "translateY(0)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         marquee: "marquee 40s linear infinite",
-        "spin-slow": "spin 8s linear infinite",
-        blob1: "blob1 7s infinite",
-        blob2: "blob2 7s infinite",
-        blob3: "blob3 7s infinite",
-        scroll: "scroll 2s ease-in-out infinite",
       },
       colors: {
         border: "hsl(var(--border))",

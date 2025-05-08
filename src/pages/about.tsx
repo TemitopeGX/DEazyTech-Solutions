@@ -1,114 +1,168 @@
 import React from "react";
 import Head from "next/head";
 import Link from "next/link";
-import {
-  FaRocket,
-  FaCheckCircle,
-  FaUsers,
-  FaLightbulb,
-  FaBullseye,
-  FaHandshake,
-  FaCog,
-  FaChartLine,
-} from "react-icons/fa";
-import { IconType } from "react-icons";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-
-// Animation variants
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const staggerChildren = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3,
-    },
-  },
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 15,
-    },
-  },
-};
-
-const slideIn = {
-  hidden: { opacity: 0, x: -50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-    },
-  },
-};
+import {
+  Users,
+  FileCheck,
+  GitBranch,
+  Code,
+  Database,
+  Rocket,
+  Building2,
+  Target,
+  Award,
+  ArrowRight,
+  Circle,
+  ChevronRight,
+  Laptop,
+  Zap,
+  Lightbulb,
+  Target as BullseyeIcon,
+  Handshake,
+  Cog,
+  LineChart,
+  CheckCircle,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { DevelopmentTimeline } from "@/components/ui/development-timeline";
 
 interface Achievement {
-  icon: IconType;
+  icon: React.ElementType;
   title: string;
   value: string;
+  color: string;
 }
 
 interface Value {
-  icon: IconType;
+  icon: React.ElementType;
   title: string;
   description: string;
+  gradient: string;
+}
+
+interface ElegantShapeProps {
+  className?: string;
+  delay?: number;
+  width?: number;
+  height?: number;
+  rotate?: number;
+  gradient?: string;
+}
+
+function ElegantShape({
+  className,
+  delay = 0,
+  width = 400,
+  height = 100,
+  rotate = 0,
+  gradient = "from-white/[0.08]",
+}: ElegantShapeProps) {
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -150,
+        rotate: rotate - 15,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        rotate: rotate,
+      }}
+      transition={{
+        duration: 2.4,
+        delay,
+        ease: [0.23, 0.86, 0.39, 0.96],
+        opacity: { duration: 1.2 },
+      }}
+      className={cn("absolute", className)}
+    >
+      <motion.div
+        animate={{
+          y: [0, 15, 0],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+        style={{
+          width,
+          height,
+        }}
+        className="relative"
+      >
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full",
+            "bg-gradient-to-r to-transparent",
+            gradient,
+            "backdrop-blur-[2px] border-2 border-white/[0.15]",
+            "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
+            "after:absolute after:inset-0 after:rounded-full",
+            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
+          )}
+        />
+      </motion.div>
+    </motion.div>
+  );
 }
 
 const AboutPage: React.FC = () => {
   const achievements: Achievement[] = [
-    { icon: FaUsers, title: "Happy Clients", value: "50+" },
-    { icon: FaRocket, title: "Projects Completed", value: "100+" },
-    { icon: FaCog, title: "Years Experience", value: "5+" },
-    { icon: FaChartLine, title: "Team Members", value: "20+" },
+    {
+      icon: Users,
+      title: "Happy Clients",
+      value: "50+",
+      color: "from-[#ff096c] to-[#8a0faf]",
+    },
+    {
+      icon: Award,
+      title: "Projects Completed",
+      value: "100+",
+      color: "from-[#8a0faf] to-[#4e10d3]",
+    },
+    {
+      icon: Code,
+      title: "Years Experience",
+      value: "5+",
+      color: "from-[#4e10d3] to-[#ff096c]",
+    },
+    {
+      icon: Building2,
+      title: "Team Members",
+      value: "20+",
+      color: "from-[#ff096c] to-[#8a0faf]",
+    },
   ];
 
   const values: Value[] = [
     {
-      icon: FaLightbulb,
+      icon: Lightbulb,
       title: "Innovation",
       description:
         "We constantly explore new technologies and solutions to stay ahead.",
+      gradient: "from-[#ff096c] to-[#8a0faf]",
     },
     {
-      icon: FaBullseye,
+      icon: Target,
       title: "Excellence",
       description:
         "We strive for the highest quality in every project we undertake.",
+      gradient: "from-[#8a0faf] to-[#4e10d3]",
     },
     {
-      icon: FaHandshake,
+      icon: Handshake,
       title: "Partnership",
       description:
         "We build long-term relationships with our clients based on trust.",
+      gradient: "from-[#4e10d3] to-[#ff096c]",
     },
   ];
-
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   return (
     <>
@@ -120,250 +174,99 @@ const AboutPage: React.FC = () => {
         />
       </Head>
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-          {/* Animated Background Shapes */}
+        <section className="relative min-h-[80vh] w-full flex flex-col items-center justify-center overflow-hidden bg-background">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#ff096c]/20 via-[#8a0faf]/20 to-[#ff096c]/20 opacity-20 blur-3xl" />
+
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute w-[800px] h-[800px] top-[-400px] left-[-200px]">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#ff096c]/40 to-[#8a0faf]/40 rounded-full animate-blob1 opacity-70 blur-[120px]"></div>
-            </div>
-            <div className="absolute w-[600px] h-[600px] top-[-100px] right-[-200px]">
-              <div className="absolute inset-0 bg-gradient-to-l from-[#4e10d3]/40 to-[#8a0faf]/40 rounded-full animate-blob2 opacity-70 blur-[100px]"></div>
-            </div>
-            <div className="absolute w-[700px] h-[700px] bottom-[-400px] left-[20%]">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#ff096c]/40 to-[#4e10d3]/40 rounded-full animate-blob3 opacity-70 blur-[110px]"></div>
-            </div>
+            <ElegantShape
+              delay={0.3}
+              width={600}
+              height={140}
+              rotate={12}
+              gradient="from-[#ff096c]/[0.15]"
+              className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+            />
+
+            <ElegantShape
+              delay={0.5}
+              width={500}
+              height={120}
+              rotate={-15}
+              gradient="from-[#8a0faf]/[0.15]"
+              className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+            />
           </div>
 
-          {/* Grid Pattern Overlay */}
-          <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
-
-          {/* Content */}
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerChildren}
-              className="max-w-4xl mx-auto text-center"
-            >
-              {/* Animated Logo */}
+          <div className="relative z-10 container mx-auto px-4 md:px-6 py-16 md:py-24">
+            <div className="max-w-4xl mx-auto text-center">
               <motion.div
-                variants={scaleIn}
-                whileHover={{ scale: 1.1 }}
-                className="mb-12 flex justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/20 backdrop-blur-md border border-border mb-8"
               >
-                <div className="relative w-40 h-40">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full animate-spin-slow opacity-75 blur-md"></div>
-                  <div className="relative w-full h-full bg-white shadow-xl rounded-full p-3 border border-gray-100">
-                    <div className="w-full h-full relative rounded-full overflow-hidden">
-                      <Image
-                        src="/images/logo.png"
-                        alt="DEAZY Tech Solutions Logo"
-                        width={140}
-                        height={140}
-                        className="object-contain"
-                        priority
-                      />
-                    </div>
-                  </div>
-                </div>
+                <Circle className="h-2 w-2 fill-[#ff096c]" />
+                <span className="text-sm text-foreground/80 tracking-wide">
+                  About DEAZY Tech
+                </span>
               </motion.div>
 
-              {/* Title */}
-              <motion.div variants={fadeInUp} className="relative mb-6">
-                <h1 className="text-6xl md:text-7xl font-bold">
-                  <span className="text-gray-900">About DEAZY Tech</span>
-                  <br />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
-                    Solutions
-                  </span>
-                </h1>
-              </motion.div>
-
-              {/* Description */}
-              <motion.div
-                variants={fadeInUp}
-                className="relative max-w-3xl mx-auto p-6 rounded-2xl bg-white/80 shadow-lg backdrop-blur-sm border border-gray-100"
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6 tracking-tight"
               >
-                <p className="text-xl text-gray-700 leading-relaxed">
-                  A leading software development company specializing in
-                  cutting-edge digital solutions for businesses, institutions,
-                  and organizations.
-                </p>
-              </motion.div>
+                <span className="bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
+                  Transforming Ideas
+                </span>
+                <br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
+                  Into Reality
+                </span>
+              </motion.h1>
 
-              {/* Stats */}
-              <motion.div
-                variants={staggerChildren}
-                className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
-              >
-                {[
-                  { value: "50+", label: "Happy Clients", icon: FaUsers },
-                  { value: "100+", label: "Projects Done", icon: FaRocket },
-                  { value: "5+", label: "Years Experience", icon: FaCog },
-                  { value: "20+", label: "Team Members", icon: FaChartLine },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    variants={scaleIn}
-                    whileHover={{ scale: 1.05 }}
-                    className="relative group"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/10 to-[#8a0faf]/10 rounded-2xl blur-xl group-hover:opacity-100 opacity-0 transition-opacity duration-500"></div>
-                    <div className="relative p-6 rounded-2xl bg-white shadow-lg border border-gray-100">
-                      <stat.icon className="w-8 h-8 mb-4 mx-auto text-[#ff096c] group-hover:text-[#8a0faf] transition-colors duration-300" />
-                      <h3 className="text-3xl font-bold text-gray-900 mb-2">
-                        {stat.value}
-                      </h3>
-                      <p className="text-gray-600">{stat.label}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          >
-            <div className="flex flex-col items-center">
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-6 h-10 rounded-full border-2 border-gray-400 p-1"
-              >
-                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full mx-auto animate-scroll"></div>
-              </motion.div>
-              <span className="text-gray-500 text-sm mt-2">Scroll Down</span>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Vision & Mission Section */}
-        <section className="relative py-24 overflow-hidden bg-gray-50">
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 md:grid-cols-2 gap-12"
-            >
-              {/* Vision Card */}
-              <motion.div
-                variants={scaleIn}
-                whileHover={{ scale: 1.02 }}
-                className="group relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/10 via-[#8a0faf]/5 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative h-full p-8 rounded-3xl bg-white shadow-lg border border-gray-100">
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-gradient-to-br from-[#ff096c]/10 to-[#8a0faf]/10 p-4 rounded-2xl inline-block mb-6"
-                  >
-                    <FaLightbulb className="text-[#ff096c] w-8 h-8" />
-                  </motion.div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                    Our Vision
-                  </h2>
-                  <p className="text-xl text-gray-700 leading-relaxed">
-                    To be a leading provider of innovative technology solutions
-                    that empower businesses and organizations worldwide.
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Mission Card */}
-              <motion.div
-                variants={scaleIn}
-                whileHover={{ scale: 1.02 }}
-                className="group relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#8a0faf]/10 via-[#ff096c]/5 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative h-full p-8 rounded-3xl bg-white shadow-lg border border-gray-100">
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-gradient-to-br from-[#8a0faf]/10 to-[#ff096c]/10 p-4 rounded-2xl inline-block mb-6"
-                  >
-                    <FaBullseye className="text-[#8a0faf] w-8 h-8" />
-                  </motion.div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                    Our Mission
-                  </h2>
-                  <ul className="space-y-4">
-                    {[
-                      "To develop custom software solutions that improve efficiency and productivity",
-                      "To provide secure, scalable, and user-friendly digital platforms",
-                      "To support organizations in leveraging technology for growth and success",
-                    ].map((item, index) => (
-                      <motion.li
-                        key={index}
-                        variants={fadeInUp}
-                        className="flex items-start space-x-3"
-                      >
-                        <FaCheckCircle className="text-[#ff096c] mt-1.5 flex-shrink-0 w-5 h-5" />
-                        <span className="text-lg text-gray-700">{item}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Values Section */}
-        <section className="relative py-24 overflow-hidden bg-white">
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="text-center mb-16"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-4xl font-bold text-gray-900 mb-6"
-              >
-                Our Values
-              </motion.h2>
               <motion.p
-                variants={fadeInUp}
-                className="text-xl text-gray-600 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
               >
-                The principles that guide our work and relationships
+                A leading software development company specializing in
+                cutting-edge digital solutions for businesses, institutions, and
+                organizations worldwide.
               </motion.p>
-            </motion.div>
+            </div>
+          </div>
+        </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {values.map((value, index) => (
+        {/* Achievements Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {achievements.map((achievement, index) => (
                 <motion.div
-                  key={index}
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.05 }}
-                  className="group relative"
+                  key={achievement.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="relative group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/10 via-[#8a0faf]/5 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative p-8 rounded-3xl bg-white shadow-lg border border-gray-100 h-full">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.5 }}
-                      className="bg-gradient-to-br from-[#ff096c]/10 to-[#8a0faf]/10 p-4 rounded-2xl inline-block mb-6"
-                    >
-                      <value.icon className="text-[#ff096c] group-hover:text-[#8a0faf] transition-colors duration-300 w-8 h-8" />
-                    </motion.div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      {value.title}
+                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                    <div className="mb-4">
+                      <div
+                        className={`w-12 h-12 rounded-lg bg-gradient-to-r ${achievement.color} flex items-center justify-center`}
+                      >
+                        <achievement.icon className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-4xl font-bold bg-gradient-to-r from-[#ff096c] to-[#8a0faf] bg-clip-text text-transparent mb-2">
+                      {achievement.value}
                     </h3>
-                    <p className="text-lg text-gray-600">{value.description}</p>
+                    <p className="text-gray-600">{achievement.title}</p>
                   </div>
                 </motion.div>
               ))}
@@ -371,146 +274,265 @@ const AboutPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Meet the CEO Section */}
-        <section className="relative py-24 overflow-hidden bg-gray-50">
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="max-w-5xl mx-auto"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-4xl font-bold text-center text-gray-900 mb-16"
+        {/* Our Story Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium"
+                >
+                  Our Journey
+                </motion.div>
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+                >
+                  Our Story
+                </motion.h2>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="relative"
+                >
+                  <div className="relative aspect-square rounded-2xl overflow-hidden">
+                    <Image
+                      src="/images/about-story.jpg"
+                      alt="Our Story"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  </div>
+                  <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <p className="text-lg font-semibold">
+                      Building the future of technology
+                    </p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-6"
+                >
+                  <p className="text-gray-600 text-lg">
+                    DEAZY Tech Solutions began with a vision to transform how
+                    businesses interact with technology. Founded by industry
+                    veterans with decades of combined experience, we've grown
+                    from a small team of passionate developers to a full-service
+                    digital solutions provider.
+                  </p>
+                  <p className="text-gray-600 text-lg">
+                    Our journey has been marked by continuous innovation,
+                    successful project deliveries, and strong client
+                    relationships. We've helped businesses across various
+                    sectors modernize their operations and achieve digital
+                    excellence.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Button
+                      className="bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white"
+                      size="lg"
+                    >
+                      Learn More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Values Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium"
               >
-                Meet Our CEO
+                Our Core Values
+              </motion.div>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+              >
+                What Drives Us
               </motion.h2>
+            </div>
 
-              <motion.div variants={scaleIn} className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/20 via-[#8a0faf]/10 to-transparent rounded-3xl blur-3xl"></div>
-                <div className="relative p-8 md:p-12 rounded-3xl bg-white shadow-lg border border-gray-100">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <motion.div variants={slideIn} className="relative">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="relative aspect-square rounded-2xl overflow-hidden shadow-xl"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {values.map((value, index) => (
+                <motion.div
+                  key={value.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
+                    <div className="mb-6">
+                      <div
+                        className={`w-14 h-14 rounded-xl bg-gradient-to-r ${value.gradient} flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/10 to-[#8a0faf]/10 mix-blend-overlay"></div>
-                        <Image
-                          src="/images/ceo.jpg"
-                          alt="CEO of DEAZY Tech Solutions"
-                          fill
-                          style={{ objectFit: "cover" }}
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          priority
-                          className="transform hover:scale-110 transition-transform duration-500"
-                        />
-                      </motion.div>
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        className="absolute -bottom-6 -right-6 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-3 rounded-2xl shadow-xl"
-                      >
-                        <span className="font-semibold text-lg">
-                          10+ Years Experience
-                        </span>
-                      </motion.div>
-                    </motion.div>
+                        <value.icon className="h-7 w-7 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                      {value.title}
+                    </h3>
+                    <p className="text-gray-600">{value.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                    <motion.div variants={fadeInUp} className="space-y-6">
-                      <div>
-                        <h3 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
-                          Comr. Ayokunle Kehinde
-                        </h3>
-                        <p className="text-[#8a0faf] font-semibold text-xl">
-                          Founder & CEO
-                        </p>
-                      </div>
-                      <p className="text-lg text-gray-700">
-                        With over a decade of experience in technology and
-                        software development, Comr. Ayokunle Kehinde has led
-                        DEAZY Tech Solutions to become a leading provider of
-                        innovative digital solutions.
+        {/* Meet the Team Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium"
+              >
+                Our Leadership
+              </motion.div>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+              >
+                Meet Our Team
+              </motion.h2>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div className="relative">
+                    <div className="aspect-square rounded-xl overflow-hidden">
+                      <Image
+                        src="/images/ceo.jpg"
+                        alt="CEO of DEAZY Tech Solutions"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                    <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-2 rounded-full shadow-lg">
+                      <span className="font-semibold">
+                        10+ Years Experience
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        Comr. Ayokunle Kehinde
+                      </h3>
+                      <p className="text-[#8a0faf] font-semibold">
+                        Founder & CEO
                       </p>
-                      <p className="text-lg text-gray-700">
-                        Under his guidance, DEAZY Tech Solutions has
-                        successfully delivered hundreds of projects and built
-                        lasting relationships with clients across various
-                        industries.
-                      </p>
-                      <div className="flex flex-wrap gap-4 pt-6">
-                        {[
-                          { icon: FaLightbulb, label: "Innovation Leader" },
-                          { icon: FaUsers, label: "Team Builder" },
-                          { icon: FaRocket, label: "Vision Driven" },
-                        ].map((badge, index) => (
-                          <motion.div
-                            key={index}
-                            variants={scaleIn}
-                            whileHover={{ scale: 1.05 }}
-                            className="group flex items-center space-x-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 px-6 py-3 rounded-xl"
-                          >
-                            <badge.icon className="text-[#ff096c] group-hover:text-[#8a0faf] transition-colors duration-300" />
-                            <span className="text-gray-700 font-medium">
-                              {badge.label}
-                            </span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
+                    </div>
+                    <p className="text-gray-600">
+                      With over a decade of experience in technology and
+                      software development, Comr. Ayokunle Kehinde has led DEAZY
+                      Tech Solutions to become a leading provider of innovative
+                      digital solutions.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-700">
+                        <Lightbulb className="h-4 w-4 text-[#ff096c]" />
+                        Innovation Leader
+                      </span>
+                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-700">
+                        <Users className="h-4 w-4 text-[#ff096c]" />
+                        Team Builder
+                      </span>
+                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full text-gray-700">
+                        <Rocket className="h-4 w-4 text-[#ff096c]" />
+                        Vision Driven
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="relative py-24 overflow-hidden bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
-          <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-20"></div>
-          <div className="container mx-auto px-4 relative z-10 text-center">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="max-w-3xl mx-auto"
-            >
+        <section className="py-20 bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
               <motion.h2
-                variants={fadeInUp}
-                className="text-4xl font-bold text-white mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl md:text-4xl font-bold mb-6"
               >
-                Ready to Work Together?
+                Ready to Transform Your Business?
               </motion.h2>
               <motion.p
-                variants={fadeInUp}
-                className="text-xl text-white/90 mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="text-xl text-gray-200 mb-8"
               >
-                Let's discuss how we can help transform your business with our
-                innovative technology solutions.
+                Let's discuss how we can help you achieve your digital
+                transformation goals.
               </motion.p>
-              <motion.div variants={scaleIn}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
                 <Link
-                  href="/start-project"
-                  className="group relative inline-flex items-center gap-4 bg-white text-gray-900 px-8 py-4 rounded-2xl font-semibold text-lg hover:scale-105 transition-transform duration-300"
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] rounded-full text-white font-semibold hover:opacity-90 transition-all duration-300 group"
                 >
-                  <motion.span
-                    initial={{ scale: 1 }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                    }}
-                  >
-                    <FaRocket className="text-[#ff096c] group-hover:rotate-12 transition-transform duration-300" />
-                  </motion.span>
-                  <span>Start Your Project</span>
+                  Start Your Project
+                  <ArrowRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </div>
