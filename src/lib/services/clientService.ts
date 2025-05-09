@@ -70,22 +70,24 @@ export const updateClient = async (
       throw new Error("Client not found");
     }
 
-    // Merge existing data with updates
+    // Create a complete ClientInput object by merging existing data with updates
     const updatedData: ClientInput = {
-      name: data.name ?? existingClient.name,
-      website: data.website ?? existingClient.website,
-      category: data.category ?? existingClient.category,
+      name: data.name !== undefined ? data.name : existingClient.name,
+      website:
+        data.website !== undefined ? data.website : existingClient.website,
+      category:
+        data.category !== undefined ? data.category : existingClient.category,
     };
 
     // Delete old document
     await deleteDoc(doc(db, "clients", id));
 
-    // Add new document with merged data
     if (logoFile) {
+      // If there's a new logo, use addClient which handles file upload
       await addClient(updatedData, logoFile);
     } else {
-      // If no new logo file, create document directly
-      await addDoc(collection(db, "clients"), {
+      // If no new logo, create document with existing logo
+      const docRef = await addDoc(collection(db, "clients"), {
         ...updatedData,
         logo: existingClient.logo,
         created_at: existingClient.created_at,
