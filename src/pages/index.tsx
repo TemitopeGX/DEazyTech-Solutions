@@ -149,9 +149,48 @@ function DeazyHero({
     }),
   };
 
+  // Add floating elements animation variants
+  const floatingVariants = {
+    animate: {
+      y: [0, -20, 0],
+      transition: {
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
+
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background">
+      {/* Graph line background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(#8a0faf10_1px,transparent_1px),linear-gradient(to_right,#8a0faf10_1px,transparent_1px)] bg-[size:24px_24px]" />
+
+      {/* Floating geometric elements */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-[#ff096c]/20 to-[#8a0faf]/20 blur-xl"
+        variants={floatingVariants}
+        animate="animate"
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-[#8a0faf]/20 to-[#ff096c]/20 blur-xl"
+        variants={floatingVariants}
+        animate="animate"
+        transition={{ delay: 1 }}
+      />
+      <motion.div
+        className="absolute top-1/3 right-1/3 w-16 h-16 rounded-lg bg-gradient-to-r from-[#ff096c]/30 to-[#8a0faf]/30 blur-lg"
+        variants={floatingVariants}
+        animate="animate"
+        transition={{ delay: 2 }}
+      />
+
       <div className="absolute inset-0 bg-gradient-to-r from-[#ff096c]/20 via-[#8a0faf]/20 to-[#ff096c]/20 opacity-20 blur-3xl" />
+
+      {/* Add animated graph lines */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c10_1px,transparent_1px),linear-gradient(-45deg,#8a0faf10_1px,transparent_1px)] bg-[size:32px_32px] animate-[grain_8s_steps(10)_infinite]" />
+      </div>
 
       <div className="absolute inset-0 overflow-hidden">
         <ElegantShape
@@ -372,6 +411,29 @@ const HomePage: React.FC = () => {
       },
     },
   };
+
+  // Add keyframes for the grain animation
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.textContent = `
+      @keyframes grain {
+        0%, 100% { transform: translate(0, 0) }
+        10% { transform: translate(-5%, -5%) }
+        20% { transform: translate(-10%, 5%) }
+        30% { transform: translate(5%, -10%) }
+        40% { transform: translate(-5%, 15%) }
+        50% { transform: translate(-10%, 5%) }
+        60% { transform: translate(15%, 0) }
+        70% { transform: translate(0, 10%) }
+        80% { transform: translate(-15%, 0) }
+        90% { transform: translate(10%, 5%) }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <>

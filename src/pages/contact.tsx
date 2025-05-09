@@ -1,347 +1,312 @@
-import React, { useState } from "react";
+import React from "react";
 import Head from "next/head";
-import {
-  FaPhone,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaWhatsapp,
-} from "react-icons/fa";
 import { motion } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Sparkles,
+  MessageSquare,
+  Globe,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
 
-// Animation variants
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const staggerChildren = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-    },
-  },
-};
-
-const slideIn = {
-  hidden: { opacity: 0, x: -50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-    },
-  },
-};
-
-interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
-const ContactPage: React.FC = () => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would typically handle the form submission
-    console.log("Form submitted:", formData);
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
-    alert("Thank you for your message. We will get back to you soon!");
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const contactInfo = [
-    {
-      icon: <FaPhone size={24} />,
-      title: "Phone",
-      details: ["+1 (234) 567-8900", "+1 (234) 567-8901"],
-    },
-    {
-      icon: <FaEnvelope size={24} />,
-      title: "Email",
-      details: ["info@deazytech.com", "support@deazytech.com"],
-    },
-    {
-      icon: <FaMapMarkerAlt size={24} />,
-      title: "Address",
-      details: ["123 Tech Street", "City, State 12345"],
-    },
-  ];
-
+export default function ContactPage() {
   return (
     <>
-      <Head
-        children={
-          <>
-            <title>Contact Us - DEAZY Tech Solutions</title>
-            <meta
-              name="description"
-              content="Get in touch with DEAZY Tech Solutions for your technology needs. We're here to help transform your business."
-            />
-          </>
-        }
-      />
+      <Head>
+        <title>Contact Us - DEAZY Tech Solutions</title>
+        <meta
+          name="description"
+          content="Get in touch with DEAZY Tech Solutions for your digital needs. We're here to help transform your ideas into reality."
+        />
+      </Head>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background relative">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute w-[500px] h-[500px] -top-48 -left-24 bg-[#ff096c] rounded-full mix-blend-multiply opacity-10 animate-blob" />
+          <div className="absolute w-[500px] h-[500px] -top-48 -right-24 bg-[#8a0faf] rounded-full mix-blend-multiply opacity-10 animate-blob animation-delay-2000" />
+          <div className="absolute w-[500px] h-[500px] top-[60%] left-[50%] transform -translate-x-1/2 bg-[#ff096c] rounded-full mix-blend-multiply opacity-10 animate-blob animation-delay-4000" />
+        </div>
+
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c05_1px,transparent_1px),linear-gradient(-45deg,#8a0faf05_1px,transparent_1px)] bg-[size:32px_32px]" />
+
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-[#15181e] to-[#4e10d3] text-white py-20">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerChildren}
-              className="text-center"
-            >
+        <section className="relative min-h-[60vh] w-full flex items-center justify-center pt-20">
+          <div className="relative z-10 container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 backdrop-blur-sm border border-white/10 mb-6"
+              >
+                <Sparkles className="w-4 h-4 text-[#ff096c]" />
+                <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
+                  Let's Create Something Amazing
+                </span>
+              </motion.div>
+
               <motion.h1
-                variants={fadeInUp}
-                className="text-4xl font-bold text-center mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight"
               >
-                Contact Us
+                <span className="text-foreground">Get in Touch</span>
+                <br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
+                  With Our Experts
+                </span>
               </motion.h1>
+
               <motion.p
-                variants={fadeInUp}
-                className="text-xl text-center max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto"
               >
-                Have a question or want to discuss a project? We'd love to hear
-                from you.
+                Transform your ideas into reality with our expert team. We're
+                here to help you build the next big thing in tech.
               </motion.p>
-            </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* Contact Information */}
-        <section className="py-20">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-12"
-            >
-              {/* Contact Information */}
-              <motion.div variants={slideIn} className="lg:col-span-1">
+        {/* Contact Information Cards */}
+        <section className="py-20 relative">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  icon: Mail,
+                  title: "Email Us",
+                  content: "contact@deazytech.com",
+                  link: "mailto:contact@deazytech.com",
+                },
+                {
+                  icon: Phone,
+                  title: "Call Us",
+                  content: "+123 456 7890",
+                  link: "tel:+1234567890",
+                },
+                {
+                  icon: MapPin,
+                  title: "Visit Us",
+                  content: "Lagos, Nigeria",
+                  link: "#location",
+                },
+                {
+                  icon: Globe,
+                  title: "Working Hours",
+                  content: "24/7 Available",
+                  link: "#",
+                },
+              ].map((item, index) => (
                 <motion.div
-                  variants={scaleIn}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-lg shadow-lg p-8"
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group relative"
                 >
-                  <motion.h2
-                    variants={fadeInUp}
-                    className="text-2xl font-semibold mb-6"
+                  <a
+                    href={item.link}
+                    className="block group-hover:scale-[1.02] transition-transform duration-300"
                   >
-                    Get in Touch
-                  </motion.h2>
-                  <motion.div variants={staggerChildren} className="space-y-8">
-                    {contactInfo.map((info, index) => (
-                      <motion.div
-                        key={index}
-                        variants={fadeInUp}
-                        className="flex items-start"
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.2, rotate: 360 }}
-                          transition={{ duration: 0.5 }}
-                          className="text-[#8a0faf] mt-1"
-                        >
-                          {info.icon}
-                        </motion.div>
-                        <motion.div variants={slideIn} className="ml-4">
-                          <motion.h3
-                            variants={fadeInUp}
-                            className="font-semibold text-lg"
-                          >
-                            {info.title}
-                          </motion.h3>
-                          {info.details.map((detail, i) => (
-                            <motion.p
-                              key={i}
-                              variants={fadeInUp}
-                              className="text-gray-600"
-                            >
-                              {detail}
-                            </motion.p>
-                          ))}
-                        </motion.div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
+                    <Card className="relative overflow-hidden border-border/50 bg-background/50 backdrop-blur-sm hover:border-[#ff096c]/50 transition-all duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/5 to-[#8a0faf]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative p-6">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ff096c] to-[#8a0faf] p-2.5 mb-4">
+                          <item.icon className="w-full h-full text-white" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground">{item.content}</p>
+                      </div>
+                    </Card>
+                  </a>
                 </motion.div>
-              </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              {/* Contact Form */}
-              <motion.div variants={slideIn} className="lg:col-span-2">
-                <motion.div
-                  variants={scaleIn}
-                  className="bg-white rounded-lg shadow-lg p-8"
-                >
-                  <motion.h2
-                    variants={fadeInUp}
-                    className="text-2xl font-semibold mb-6"
-                  >
-                    Send Us a Message
-                  </motion.h2>
-                  <motion.form
-                    variants={staggerChildren}
-                    onSubmit={handleSubmit}
-                    className="space-y-6"
-                  >
-                    <motion.div
-                      variants={fadeInUp}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                    >
-                      <motion.div variants={fadeInUp}>
+        {/* Contact Form Section */}
+        <section className="py-20 relative">
+          <div className="container mx-auto px-4">
+            <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+              {/* Left side - Contact Form */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Card className="p-8 backdrop-blur-sm bg-background/50 border-border/50">
+                  <div className="space-y-8">
+                    <div>
+                      <h2 className="text-3xl font-bold mb-4">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
+                          Send Us a Message
+                        </span>
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Fill out the form below and we'll get back to you
+                        shortly.
+                      </p>
+                    </div>
+
+                    <form className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label htmlFor="name" className="text-sm font-medium">
+                            Your Name
+                          </label>
+                          <Input
+                            id="name"
+                            placeholder="John Doe"
+                            className="border-border/50 focus:border-[#ff096c] bg-background/50 backdrop-blur-sm"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label
+                            htmlFor="email"
+                            className="text-sm font-medium"
+                          >
+                            Your Email
+                          </label>
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="john@example.com"
+                            className="border-border/50 focus:border-[#ff096c] bg-background/50 backdrop-blur-sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
                         <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700 mb-2"
+                          htmlFor="subject"
+                          className="text-sm font-medium"
                         >
-                          Your Name
+                          Subject
                         </label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8a0faf] focus:border-transparent"
+                        <Input
+                          id="subject"
+                          placeholder="Project Inquiry"
+                          className="border-border/50 focus:border-[#ff096c] bg-background/50 backdrop-blur-sm"
                         />
-                      </motion.div>
-                      <motion.div variants={fadeInUp}>
+                      </div>
+
+                      <div className="space-y-2">
                         <label
-                          htmlFor="email"
-                          className="block text-sm font-medium text-gray-700 mb-2"
+                          htmlFor="message"
+                          className="text-sm font-medium"
                         >
-                          Your Email
+                          Message
                         </label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8a0faf] focus:border-transparent"
+                        <Textarea
+                          id="message"
+                          placeholder="Tell us about your project..."
+                          className="min-h-[150px] border-border/50 focus:border-[#ff096c] bg-background/50 backdrop-blur-sm"
                         />
-                      </motion.div>
-                    </motion.div>
-                    <motion.div variants={fadeInUp}>
-                      <label
-                        htmlFor="subject"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Subject
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8a0faf] focus:border-transparent"
-                      />
-                    </motion.div>
-                    <motion.div variants={fadeInUp}>
-                      <label
-                        htmlFor="message"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        rows={6}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8a0faf] focus:border-transparent"
-                      ></textarea>
-                    </motion.div>
-                    <motion.div variants={scaleIn} whileHover={{ scale: 1.02 }}>
-                      <button
-                        type="submit"
-                        className="w-full bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                      </div>
+
+                      <Button
+                        className="w-full bg-gradient-to-r from-[#ff096c] to-[#8a0faf] hover:opacity-90 text-white gap-2 group"
+                        size="lg"
                       >
                         Send Message
-                      </button>
-                    </motion.div>
-                  </motion.form>
-                </motion.div>
+                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </form>
+                  </div>
+                </Card>
               </motion.div>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* Map Section */}
-        <section className="bg-gray-100 py-20">
-          <div className="container mx-auto px-6">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={staggerChildren}
-              className="max-w-4xl mx-auto"
-            >
-              <motion.h2
-                variants={fadeInUp}
-                className="text-2xl font-bold text-center mb-8"
+              {/* Right side - Additional Info */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="lg:pl-12"
               >
-                Visit Our Office
-              </motion.h2>
-              <motion.div variants={scaleIn} className="aspect-w-16 aspect-h-9">
-                {/* Replace with your actual map embed code */}
-                <motion.div
-                  variants={fadeInUp}
-                  className="w-full h-[400px] bg-gray-300 rounded-lg"
-                >
-                  {/* Add your map component or iframe here */}
-                </motion.div>
+                <Card className="p-8 backdrop-blur-sm bg-background/50 border-border/50">
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-6">
+                        Why Choose{" "}
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
+                          DEAZY Tech?
+                        </span>
+                      </h3>
+                      <ul className="space-y-6">
+                        {[
+                          {
+                            title: "Expert Team",
+                            description:
+                              "Years of experience in delivering cutting-edge solutions",
+                          },
+                          {
+                            title: "Custom Solutions",
+                            description:
+                              "Tailored approaches to meet your unique requirements",
+                          },
+                          {
+                            title: "24/7 Support",
+                            description:
+                              "Round-the-clock assistance and maintenance",
+                          },
+                          {
+                            title: "Competitive Pricing",
+                            description: "Best value for your investment",
+                          },
+                          {
+                            title: "Quick Turnaround",
+                            description: "Fast and efficient project delivery",
+                          },
+                        ].map((item, index) => (
+                          <motion.li
+                            key={index}
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                            viewport={{ once: true }}
+                            className="flex items-start gap-4 group"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff096c]/10 to-[#8a0faf]/10 flex items-center justify-center flex-shrink-0 group-hover:from-[#ff096c]/20 group-hover:to-[#8a0faf]/20 transition-colors duration-300">
+                              <ArrowRight className="w-4 h-4 text-[#ff096c] group-hover:translate-x-0.5 transition-transform" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold mb-1">
+                                {item.title}
+                              </h4>
+                              <p className="text-sm text-muted-foreground">
+                                {item.description}
+                              </p>
+                            </div>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </Card>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </div>
     </>
   );
-};
-
-export default ContactPage;
+}
