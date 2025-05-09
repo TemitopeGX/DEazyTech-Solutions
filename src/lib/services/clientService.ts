@@ -64,8 +64,33 @@ export const updateClient = async (
   logoFile?: File
 ): Promise<void> => {
   try {
+    // Get the existing client data
+    const existingClient = await getClient(id);
+    if (!existingClient) {
+      throw new Error("Client not found");
+    }
+
+    // Merge existing data with updates
+    const updatedData: ClientInput = {
+      name: data.name ?? existingClient.name,
+      website: data.website ?? existingClient.website,
+      category: data.category ?? existingClient.category,
+    };
+
+    // Delete old document
     await deleteDoc(doc(db, "clients", id));
-    await addClient(data, logoFile);
+
+    // Add new document with merged data
+    if (logoFile) {
+      await addClient(updatedData, logoFile);
+    } else {
+      // If no new logo file, create document directly
+      await addDoc(collection(db, "clients"), {
+        ...updatedData,
+        logo: existingClient.logo,
+        created_at: existingClient.created_at,
+      });
+    }
   } catch (error) {
     console.error("Error updating client:", error);
     throw error;
