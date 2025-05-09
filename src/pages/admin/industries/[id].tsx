@@ -2,129 +2,116 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
-import { supabase } from "@/lib/supabase";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { FaUpload, FaSpinner, FaPlus, FaTrash } from "react-icons/fa";
+import Image from "next/image";
+import {
+  getIndustryById,
+  updateIndustry,
+  createIndustry,
+  uploadIndustryImage,
+  deleteIndustryImage,
+  Industry,
+} from "@/services/industryService";
 
-interface IndustryFormValues {
-  name: string;
-  description: string;
-  image_url: string;
-  expertise: string[];
-}
+type FormData = Omit<Industry, "id">;
 
 const IndustrySchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   description: Yup.string().required("Required"),
-  image_url: Yup.string().required("Required"),
+  imageUrl: Yup.string().required("Required"),
   expertise: Yup.array()
     .of(Yup.string().required("Required"))
     .min(1, "Add at least one area of expertise"),
 });
 
-const IndustryForm = () => {
+export default function IndustryForm() {
   const router = useRouter();
-  const { action, id } = router.query;
-  const isEdit = action === "edit";
+  const { id } = router.query;
+  const isNew = id === "new";
 
-  const [industry, setIndustry] = useState<IndustryFormValues>({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
-    image_url: "",
-    expertise: [""],
+    imageUrl: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isEdit && id) {
-      fetchIndustry(id as string);
+    if (!isNew && id && typeof id === "string") {
+      fetchIndustry(id);
     }
-  }, [isEdit, id]);
+  }, [id, isNew]);
 
   const fetchIndustry = async (industryId: string) => {
     try {
-      const { data, error } = await supabase
-        .from("industries")
-        .select("*")
-        .eq("id", industryId)
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        setIndustry(data);
-        setImagePreview(data.image_url);
+      const industry = await getIndustryById(industryId);
+      if (industry) {
+        const { name, description, imageUrl } = industry;
+        setFormData({ name, description, imageUrl });
+        setImagePreview(imageUrl);
       }
-    } catch (error: any) {
-      toast.error(error.message || "Error fetching industry");
-      router.push("/admin/industries");
+    } catch (error) {
+      console.error("Error fetching industry:", error);
+      toast.error("Failed to fetch industry details");
     }
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const uploadImage = async (file: File) => {
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `industry-images/${fileName}`;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-    const { error: uploadError } = await supabase.storage
-      .from("public")
-      .upload(filePath, file);
-
-    if (uploadError) throw uploadError;
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("public").getPublicUrl(filePath);
-
-    return publicUrl;
-  };
-
-  const handleSubmit = async (values: IndustryFormValues) => {
     try {
-      setIsLoading(true);
+      let imageUrl = formData.imageUrl;
 
-      let imageUrl = values.image_url;
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
+        // Delete old image if it exists
+        if (formData.imageUrl) {
+          await deleteIndustryImage(formData.imageUrl);
+        }
+        // Upload new image
+        imageUrl = await uploadIndustryImage(imageFile);
       }
 
-      const industryData = {
-        ...values,
-        image_url: imageUrl,
-        expertise: values.expertise.filter((item) => item.trim() !== ""),
+      const industryData: FormData = {
+        name: formData.name,
+        description: formData.description,
+        imageUrl,
       };
 
-      if (isEdit) {
-        const { error } = await supabase
-          .from("industries")
-          .update(industryData)
-          .eq("id", id);
-
-        if (error) throw error;
-        toast.success("Industry updated successfully");
-      } else {
-        const { error } = await supabase
-          .from("industries")
-          .insert([industryData]);
-
-        if (error) throw error;
+      if (isNew) {
+        await createIndustry(industryData);
         toast.success("Industry created successfully");
+      } else if (typeof id === "string") {
+        await updateIndustry(id, industryData);
+        toast.success("Industry updated successfully");
       }
 
       router.push("/admin/industries");
-    } catch (error: any) {
-      toast.error(error.message || "Error saving industry");
+    } catch (error) {
+      console.error("Error saving industry:", error);
+      toast.error("Failed to save industry");
     } finally {
       setIsLoading(false);
     }
@@ -132,160 +119,96 @@ const IndustryForm = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          {isEdit ? "Edit Industry" : "Add New Industry"}
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">
+          {isNew ? "Create New Industry" : "Edit Industry"}
         </h1>
 
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <Formik
-            initialValues={industry}
-            validationSchema={IndustrySchema}
-            onSubmit={handleSubmit}
-            enableReinitialize
-          >
-            {({ values, errors, touched }) => (
-              <Form className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Industry Name
-                  </label>
-                  <Field
-                    id="name"
-                    name="name"
-                    type="text"
-                    className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                  />
-                  {errors.name && touched.name && (
-                    <div className="text-red-600 text-sm mt-1">
-                      {errors.name}
-                    </div>
-                  )}
-                </div>
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-2xl bg-white shadow-md rounded-lg p-6"
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
 
-                <div>
-                  <label
-                    htmlFor="description"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Description
-                  </label>
-                  <Field
-                    as="textarea"
-                    id="description"
-                    name="description"
-                    rows={4}
-                    className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                  />
-                  {errors.description && touched.description && (
-                    <div className="text-red-600 text-sm mt-1">
-                      {errors.description}
-                    </div>
-                  )}
-                </div>
+          <div className="mb-4">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Industry Image
-                  </label>
-                  <div className="mt-1 flex items-center gap-4">
-                    {imagePreview && (
-                      <div className="w-32 h-24 relative rounded-lg overflow-hidden">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <label className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-[#8a0faf] text-[#8a0faf] rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                      <FaUpload className="w-5 h-5" />
-                      <span>Choose Image</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Areas of Expertise
-                  </label>
-                  <FieldArray name="expertise">
-                    {({ push, remove }) => (
-                      <div className="space-y-3">
-                        {values.expertise.map((_, index) => (
-                          <div key={index} className="flex gap-2">
-                            <Field
-                              name={`expertise.${index}`}
-                              type="text"
-                              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                              placeholder="Enter an area of expertise"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => remove(index)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <FaTrash className="w-5 h-5" />
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => push("")}
-                          className="flex items-center gap-2 text-[#8a0faf] hover:text-[#ff096c] transition-colors"
-                        >
-                          <FaPlus className="w-4 h-4" />
-                          <span>Add Area of Expertise</span>
-                        </button>
-                      </div>
-                    )}
-                  </FieldArray>
-                  {errors.expertise && touched.expertise && (
-                    <div className="text-red-600 text-sm mt-1">
-                      {errors.expertise}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/admin/industries")}
-                    className="px-6 py-2 border-2 border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex items-center gap-2 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
-                  >
-                    {isLoading ? (
-                      <>
-                        <FaSpinner className="w-5 h-5 animate-spin" />
-                        <span>Saving...</span>
-                      </>
-                    ) : (
-                      <span>Save Industry</span>
-                    )}
-                  </button>
-                </div>
-              </Form>
+          <div className="mb-4">
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Image
+            </label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full"
+            />
+            {imagePreview && (
+              <div className="mt-2">
+                <Image
+                  src={imagePreview}
+                  alt="Industry preview"
+                  width={200}
+                  height={200}
+                  className="rounded-md"
+                />
+              </div>
             )}
-          </Formik>
-        </div>
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              onClick={() => router.push("/admin/industries")}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+            >
+              {isLoading ? "Saving..." : "Save Industry"}
+            </button>
+          </div>
+        </form>
       </div>
     </AdminLayout>
   );
-};
-
-export default IndustryForm;
+}

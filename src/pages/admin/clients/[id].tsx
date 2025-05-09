@@ -5,14 +5,14 @@ import Image from "next/image";
 import { HiUpload, HiX } from "react-icons/hi";
 import { toast } from "react-hot-toast";
 import {
-  getProject,
-  addProject,
-  updateProject,
-  type IProject,
-  type ProjectInput,
-} from "@/lib/services/projectService";
+  Client,
+  ClientInput,
+  addClient,
+  updateClient,
+  getClient,
+} from "@/lib/services/clientService";
 
-const ProjectForm = () => {
+const ClientForm = () => {
   const router = useRouter();
   const { id } = router.query;
   const isEditing = id !== "add";
@@ -21,40 +21,36 @@ const ProjectForm = () => {
   const [saving, setSaving] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [form, setForm] = useState<ProjectInput>({
-    title: "",
-    description: "",
-    technologies: [],
-    category: "web",
-    link: "",
+  const [form, setForm] = useState<ClientInput>({
+    name: "",
+    website: "",
+    category: "client",
   });
 
   useEffect(() => {
     if (isEditing && id) {
-      fetchProject();
+      fetchClient();
     } else {
       setLoading(false);
     }
   }, [id, isEditing]);
 
-  const fetchProject = async () => {
+  const fetchClient = async () => {
     try {
-      const project = await getProject(id as string);
-      if (project) {
+      const client = await getClient(id as string);
+      if (client) {
         setForm({
-          title: project.title,
-          description: project.description,
-          technologies: project.technologies,
-          category: project.category,
-          link: project.link || "",
+          name: client.name,
+          website: client.website,
+          category: client.category,
         });
-        setImagePreview(project.image);
+        setImagePreview(client.logo);
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching project:", error);
-      toast.error("Failed to fetch project data");
-      router.push("/admin/projects");
+      console.error("Error fetching client:", error);
+      toast.error("Failed to fetch client data");
+      router.push("/admin/clients");
     }
   };
 
@@ -75,7 +71,7 @@ const ProjectForm = () => {
     if (saving) return;
 
     if (!imageFile && !isEditing) {
-      toast.error("Please upload an image");
+      toast.error("Please upload a logo");
       return;
     }
 
@@ -83,17 +79,17 @@ const ProjectForm = () => {
 
     try {
       if (isEditing) {
-        await updateProject(id as string, form, imageFile || undefined);
-        toast.success("Project updated successfully");
+        await updateClient(id as string, form, imageFile || undefined);
+        toast.success("Client updated successfully");
       } else {
-        if (!imageFile) throw new Error("Image is required");
-        await addProject(form, imageFile);
-        toast.success("Project added successfully");
+        if (!imageFile) throw new Error("Logo is required");
+        await addClient(form, imageFile);
+        toast.success("Client added successfully");
       }
-      router.push("/admin/projects");
+      router.push("/admin/clients");
     } catch (error: any) {
-      console.error("Error saving project:", error);
-      toast.error(error.message || "Failed to save project");
+      console.error("Error saving client:", error);
+      toast.error(error.message || "Failed to save client");
     } finally {
       setSaving(false);
     }
@@ -113,14 +109,14 @@ const ProjectForm = () => {
     <AdminLayout>
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          {isEditing ? "Edit Project" : "Add New Project"}
+          {isEditing ? "Edit Client/Partner" : "Add New Client/Partner"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Image Upload */}
+          {/* Logo Upload */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Project Image
+              Logo
             </label>
             <div className="relative">
               {imagePreview ? (
@@ -129,7 +125,7 @@ const ProjectForm = () => {
                     src={imagePreview}
                     alt="Preview"
                     fill
-                    className="object-cover"
+                    className="object-contain p-4"
                   />
                   <button
                     type="button"
@@ -147,10 +143,10 @@ const ProjectForm = () => {
                   <div className="flex flex-col items-center justify-center">
                     <HiUpload className="w-10 h-10 text-gray-400" />
                     <p className="mt-2 text-sm text-gray-500">
-                      Click to upload image
+                      Click to upload logo
                     </p>
                     <p className="text-xs text-gray-500">
-                      PNG, JPG, GIF up to 5MB
+                      SVG, PNG, JPG or GIF
                     </p>
                   </div>
                   <input
@@ -164,20 +160,20 @@ const ProjectForm = () => {
             </div>
           </div>
 
-          {/* Project Info */}
+          {/* Client/Partner Info */}
           <div className="space-y-4">
             <div>
               <label
-                htmlFor="title"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
-                Title
+                Name
               </label>
               <input
                 type="text"
-                id="title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                id="name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
                 required
               />
@@ -185,45 +181,17 @@ const ProjectForm = () => {
 
             <div>
               <label
-                htmlFor="description"
+                htmlFor="website"
                 className="block text-sm font-medium text-gray-700"
               >
-                Description
-              </label>
-              <textarea
-                id="description"
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-                rows={4}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="technologies"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Technologies (comma-separated)
+                Website
               </label>
               <input
-                type="text"
-                id="technologies"
-                value={form.technologies.join(", ")}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    technologies: e.target.value
-                      .split(",")
-                      .map((tech) => tech.trim())
-                      .filter(Boolean),
-                  })
-                }
+                type="url"
+                id="website"
+                value={form.website}
+                onChange={(e) => setForm({ ...form, website: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                placeholder="React, TypeScript, Tailwind CSS"
                 required
               />
             </div>
@@ -238,31 +206,18 @@ const ProjectForm = () => {
               <select
                 id="category"
                 value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    category: e.target.value as "client" | "partner",
+                  })
+                }
                 className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
                 required
               >
-                <option value="web">Web Development</option>
-                <option value="mobile">Mobile Development</option>
-                <option value="desktop">Desktop Development</option>
+                <option value="client">Client</option>
+                <option value="partner">Partner</option>
               </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="link"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Project Link (optional)
-              </label>
-              <input
-                type="url"
-                id="link"
-                value={form.link}
-                onChange={(e) => setForm({ ...form, link: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                placeholder="https://example.com"
-              />
             </div>
           </div>
 
@@ -276,7 +231,7 @@ const ProjectForm = () => {
             </button>
             <button
               type="button"
-              onClick={() => router.push("/admin/projects")}
+              onClick={() => router.push("/admin/clients")}
               className="flex-1 bg-gray-100 text-gray-600 py-2 px-4 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               Cancel
@@ -288,4 +243,4 @@ const ProjectForm = () => {
   );
 };
 
-export default ProjectForm;
+export default ClientForm;

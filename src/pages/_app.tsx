@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export default function App({ Component, pageProps, router }: AppProps) {
   const isAdminPage = router.pathname.startsWith("/admin");
@@ -20,7 +21,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
   );
 
   return (
-    <>
+    <AuthProvider>
       {isAdminPage ? (
         <PageContent />
       ) : (
@@ -41,6 +42,6 @@ export default function App({ Component, pageProps, router }: AppProps) {
         theme="light"
       />
       <Toaster position="top-right" />
-    </>
+    </AuthProvider>
   );
 }

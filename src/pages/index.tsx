@@ -112,13 +112,17 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="bg-background/50 backdrop-blur-sm border border-border rounded-xl p-6 flex flex-col items-center text-center"
+      className="bg-background/50 backdrop-blur-sm border border-border rounded-xl p-4 sm:p-6 flex flex-col items-center text-center"
       whileHover={{ y: -5, boxShadow: "0 10px 30px -15px rgba(0, 0, 0, 0.3)" }}
       transition={{ duration: 0.2 }}
     >
-      <div className="bg-primary/10 p-3 rounded-full mb-4">{icon}</div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground text-sm">{description}</p>
+      <div className="bg-primary/10 p-2 sm:p-3 rounded-full mb-3 sm:mb-4">
+        {icon}
+      </div>
+      <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">
+        {title}
+      </h3>
+      <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
     </motion.div>
   );
 };
@@ -162,24 +166,24 @@ function DeazyHero({
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background">
+    <div className="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden bg-background">
       {/* Graph line background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(#8a0faf10_1px,transparent_1px),linear-gradient(to_right,#8a0faf10_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(#8a0faf10_1px,transparent_1px),linear-gradient(to_right,#8a0faf10_1px,transparent_1px)] bg-[size:16px_16px] sm:bg-[size:24px_24px]" />
 
-      {/* Floating geometric elements */}
+      {/* Floating geometric elements - Show on all screens */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-[#ff096c]/20 to-[#8a0faf]/20 blur-xl"
+        className="absolute top-1/4 left-1/4 w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 rounded-full bg-gradient-to-r from-[#ff096c]/20 to-[#8a0faf]/20 blur-xl"
         variants={floatingVariants}
         animate="animate"
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-[#8a0faf]/20 to-[#ff096c]/20 blur-xl"
+        className="absolute bottom-1/4 right-1/4 w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-[#8a0faf]/20 to-[#ff096c]/20 blur-xl"
         variants={floatingVariants}
         animate="animate"
         transition={{ delay: 1 }}
       />
       <motion.div
-        className="absolute top-1/3 right-1/3 w-16 h-16 rounded-lg bg-gradient-to-r from-[#ff096c]/30 to-[#8a0faf]/30 blur-lg"
+        className="absolute top-1/3 right-1/3 w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg bg-gradient-to-r from-[#ff096c]/30 to-[#8a0faf]/30 blur-lg"
         variants={floatingVariants}
         animate="animate"
         transition={{ delay: 2 }}
@@ -189,67 +193,67 @@ function DeazyHero({
 
       {/* Add animated graph lines */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c10_1px,transparent_1px),linear-gradient(-45deg,#8a0faf10_1px,transparent_1px)] bg-[size:32px_32px] animate-[grain_8s_steps(10)_infinite]" />
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c10_1px,transparent_1px),linear-gradient(-45deg,#8a0faf10_1px,transparent_1px)] bg-[size:24px_24px] sm:bg-[size:32px_32px] animate-[grain_8s_steps(10)_infinite]" />
       </div>
 
       <div className="absolute inset-0 overflow-hidden">
         <ElegantShape
           delay={0.3}
-          width={600}
-          height={140}
+          width={200}
+          height={80}
           rotate={12}
           gradient="from-[#ff096c]/[0.15]"
-          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+          className="left-[-10%] sm:left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
         />
 
         <ElegantShape
           delay={0.5}
-          width={500}
-          height={120}
+          width={180}
+          height={60}
           rotate={-15}
           gradient="from-[#8a0faf]/[0.15]"
-          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+          className="right-[-10%] sm:right-[-10%] md:right-[0%] top-[70%] md:top-[75%]"
         />
 
         <ElegantShape
           delay={0.4}
-          width={300}
-          height={80}
+          width={150}
+          height={50}
           rotate={-8}
           gradient="from-[#ff096c]/[0.15]"
-          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+          className="left-[0%] sm:left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
         />
 
         <ElegantShape
           delay={0.6}
-          width={200}
-          height={60}
+          width={120}
+          height={40}
           rotate={20}
           gradient="from-[#8a0faf]/[0.15]"
-          className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+          className="right-[10%] sm:right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
         />
 
         <ElegantShape
           delay={0.7}
-          width={150}
-          height={40}
+          width={80}
+          height={25}
           rotate={-25}
           gradient="from-[#ff096c]/[0.15]"
-          className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+          className="left-[15%] sm:left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
         />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 md:px-6 py-16 md:py-24">
+      <div className="relative z-10 container mx-auto px-4 md:px-6 py-16 sm:py-20 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             custom={0}
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/20 backdrop-blur-md border border-border mb-8 md:mb-12"
+            className="inline-flex items-center gap-3 px-4 sm:px-4 py-2 rounded-full bg-background/20 backdrop-blur-md border border-border mb-8 sm:mb-10 md:mb-12"
           >
-            <Circle className="h-2 w-2 fill-[#ff096c]" />
-            <span className="text-sm text-foreground/80 tracking-wide">
+            <Circle className="h-3 w-3 fill-[#ff096c]" />
+            <span className="text-base sm:text-lg text-foreground/80 tracking-wide font-medium">
               {badge}
             </span>
           </motion.div>
@@ -260,16 +264,12 @@ function DeazyHero({
             initial="hidden"
             animate="visible"
           >
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold mb-6 md:mb-8 tracking-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-8 sm:mb-10 md:mb-12 tracking-tight px-2 leading-[1.1]">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
                 {title}
               </span>
-              <br />
-              <span
-                className={cn(
-                  "bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]"
-                )}
-              >
+              <br className="hidden sm:block" />
+              <span className="mt-3 sm:mt-0 inline-block sm:inline bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
                 {subtitle}
               </span>
             </h1>
@@ -281,7 +281,7 @@ function DeazyHero({
             initial="hidden"
             animate="visible"
           >
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed font-light tracking-wide max-w-2xl mx-auto px-4">
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-10 sm:mb-12 leading-relaxed font-light tracking-wide max-w-2xl mx-auto px-4">
               {description}
             </p>
           </motion.div>
@@ -291,21 +291,21 @@ function DeazyHero({
             variants={fadeUpVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-wrap justify-center gap-4 mb-16"
+            className="flex flex-col sm:flex-row justify-center gap-5 sm:gap-4 mb-10 sm:mb-16 px-4"
           >
             <Button
               size="lg"
-              className="bg-gradient-to-r from-[#ff096c] to-[#8a0faf] hover:opacity-90 text-white"
+              className="w-full sm:w-auto bg-gradient-to-r from-[#ff096c] to-[#8a0faf] hover:opacity-90 text-white text-lg sm:text-xl py-7 sm:py-6 rounded-xl sm:rounded-lg"
               asChild
             >
               <Link href="/contact">
-                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                Get Started <ArrowRight className="ml-2 h-6 w-6" />
               </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-[#8a0faf] text-[#8a0faf] hover:bg-[#8a0faf]/5"
+              className="w-full sm:w-auto border-[#8a0faf] text-[#8a0faf] hover:bg-[#8a0faf]/5 text-lg sm:text-xl py-7 sm:py-6 rounded-xl sm:rounded-lg"
               asChild
             >
               <Link href="/about">Learn More</Link>
@@ -322,6 +322,151 @@ function DeazyHero({
 const HomePage: React.FC = () => {
   // Auto-scroll logic for services carousel
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Define the logos object
+  const logos = {
+    frontend: [
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+        alt: "React",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+        alt: "Next.js",
+        extra: "bg-white rounded-lg p-2",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
+        alt: "Vue.js",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
+        alt: "Angular",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        alt: "JavaScript",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        alt: "TypeScript",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+        alt: "HTML5",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+        alt: "CSS3",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
+        alt: "Tailwind CSS",
+      },
+    ],
+    backend: [
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+        alt: "Node.js",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+        alt: "Express.js",
+        extra: "bg-white rounded-lg p-2",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg",
+        alt: "NestJS",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        alt: "Python",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
+        alt: "Django",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+        alt: "PHP",
+      },
+    ],
+    database: [
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+        alt: "MySQL",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+        alt: "MongoDB",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+        alt: "PostgreSQL",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
+        alt: "Redis",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+        alt: "Firebase",
+      },
+    ],
+    tools: [
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+        alt: "Git",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+        alt: "GitHub",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+        alt: "Docker",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
+        alt: "Kubernetes",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg",
+        alt: "AWS",
+      },
+    ],
+    design: [
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+        alt: "Figma",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sketch/sketch-original.svg",
+        alt: "Sketch",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg",
+        alt: "Photoshop",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg",
+        alt: "Adobe XD",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
+        alt: "Illustrator",
+      },
+    ],
+  } as const;
+
+  type LogoType = {
+    src: string;
+    alt: string;
+    extra?: string;
+  };
+
+  const [activeTab, setActiveTab] = useState<keyof typeof logos>("frontend");
+
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -451,77 +596,123 @@ const HomePage: React.FC = () => {
         subtitle="Digital Excellence"
         description="We build innovative digital solutions that help businesses grow, scale, and succeed in the modern tech landscape with our cutting-edge development expertise."
       />
-      {/* Trusted By Companies Section - Continuous Scrolling Logos (Online Images) */}
-      <section className="py-14 bg-white border-t border-b border-gray-100">
+      {/* Trusted By Companies Section - Continuous Scrolling Logos */}
+      <section className="py-6 sm:py-10 bg-white border-t border-b border-gray-100">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium">
+          <div className="text-center mb-4 sm:mb-6">
+            <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-2 sm:mb-3 text-[#8a0faf] text-sm sm:text-base font-medium">
               Trusted by leading companies
             </span>
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
               Our Clients & Partners
             </h3>
           </div>
-          <div className="relative w-full overflow-hidden">
+
+          {/* Logo Marquee Container */}
+          <div className="relative w-full overflow-hidden bg-white py-4">
+            {/* Add fade effects */}
+            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10"></div>
+
+            {/* Marquee wrapper */}
             <div className="flex w-[200%] animate-marquee">
               {/* First set of logos */}
-              <div className="flex w-1/2 justify-around items-center">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
-                  alt="Google"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
-                  alt="Microsoft"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
-                  alt="Slack"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
-                  alt="IBM"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-                  alt="Amazon"
-                  className="h-12 w-auto object-contain"
-                />
+              <div className="flex w-1/2 justify-around items-center min-w-max gap-12 px-8">
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
+                    alt="Google"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+                    alt="Microsoft"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
+                    alt="Slack"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                    alt="IBM"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+                    alt="Amazon"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
               </div>
-              {/* Second set of logos for seamless loop */}
-              <div className="flex w-1/2 justify-around items-center">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
-                  alt="Google"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
-                  alt="Microsoft"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
-                  alt="Slack"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
-                  alt="IBM"
-                  className="h-12 w-auto object-contain"
-                />
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-                  alt="Amazon"
-                  className="h-12 w-auto object-contain"
-                />
+
+              {/* Second set of logos (duplicate for seamless loop) */}
+              <div className="flex w-1/2 justify-around items-center min-w-max gap-12 px-8">
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
+                    alt="Google"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+                    alt="Microsoft"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/7/76/Slack_Icon.png"
+                    alt="Slack"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                    alt="IBM"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
+                <div className="flex items-center justify-center w-24 sm:w-32 h-12 sm:h-16">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+                    alt="Amazon"
+                    className="max-h-6 sm:max-h-8 w-auto object-contain"
+                  />
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Add CSS for the marquee animation */}
+          <style jsx>{`
+            @keyframes marquee {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
+            }
+            .animate-marquee {
+              animation: marquee 30s linear infinite;
+            }
+            .animate-marquee:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
         </div>
       </section>
       {/* About Us Section */}
@@ -1049,292 +1240,59 @@ const HomePage: React.FC = () => {
             </h3>
           </div>
           {/* Tabs */}
-          {(() => {
-            const tabs = [
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+            {[
               { label: "Frontend", key: "frontend" },
               { label: "Backend", key: "backend" },
               { label: "Database", key: "database" },
               { label: "Tools", key: "tools" },
               { label: "Design", key: "design" },
-            ];
-            const logos = {
-              frontend: [
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-                  alt: "React",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-                  alt: "Next.js",
-                  extra: "bg-white rounded-lg p-2",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
-                  alt: "Vue.js",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
-                  alt: "Angular",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-                  alt: "JavaScript",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-                  alt: "TypeScript",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
-                  alt: "HTML5",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
-                  alt: "CSS3",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
-                  alt: "Tailwind CSS",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
-                  alt: "Bootstrap",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg",
-                  alt: "Material UI",
-                },
-              ],
-              backend: [
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-                  alt: "Node.js",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-                  alt: "Express.js",
-                  extra: "bg-white rounded-lg p-2",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-plain.svg",
-                  alt: "NestJS",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-                  alt: "Python",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg",
-                  alt: "Django",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
-                  alt: "PHP",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg",
-                  alt: "Laravel",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
-                  alt: "Java",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
-                  alt: "Go",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg",
-                  alt: "Ruby",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
-                  alt: "Swift",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
-                  alt: "Kotlin",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg",
-                  alt: "Dart",
-                },
-              ],
-              database: [
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
-                  alt: "MySQL",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-                  alt: "MongoDB",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-                  alt: "PostgreSQL",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
-                  alt: "Redis",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
-                  alt: "SQLite",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
-                  alt: "Firebase",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg",
-                  alt: "MariaDB",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg",
-                  alt: "Oracle",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
-                  alt: "SQL Server",
-                },
-              ],
-              tools: [
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
-                  alt: "Git",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
-                  alt: "GitHub",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg",
-                  alt: "GitLab",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
-                  alt: "VS Code",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg",
-                  alt: "Webpack",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-                  alt: "Docker",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
-                  alt: "Kubernetes",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/aws/aws-original.svg",
-                  alt: "AWS",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg",
-                  alt: "Google Cloud",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg",
-                  alt: "Azure",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
-                  alt: "Jenkins",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg",
-                  alt: "ESLint",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/babel/babel-original.svg",
-                  alt: "Babel",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/heroku/heroku-original.svg",
-                  alt: "Heroku",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg",
-                  alt: "Jest",
-                },
-              ],
-              design: [
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
-                  alt: "Figma",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sketch/sketch-original.svg",
-                  alt: "Sketch",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobephotoshop/adobephotoshop-plain.svg",
-                  alt: "Photoshop",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobexd/adobexd-plain.svg",
-                  alt: "Adobe XD",
-                },
-                {
-                  src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/adobeillustrator/adobeillustrator-plain.svg",
-                  alt: "Illustrator",
-                },
-              ],
-            } as const;
-            const [activeTab, setActiveTab] =
-              useState<keyof typeof logos>("frontend");
-            return (
-              <>
-                <div className="flex flex-wrap justify-center gap-3 mb-6">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() =>
-                        setActiveTab(tab.key as keyof typeof logos)
-                      }
-                      className={`px-4 py-1.5 rounded-full font-semibold border transition-all text-sm md:text-base focus:outline-none ${
-                        activeTab === tab.key
-                          ? "bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white shadow-md"
-                          : "bg-white text-[#4e10d3] border-[#8a0faf] hover:bg-[#f3eafd]"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as keyof typeof logos)}
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-sm sm:text-base transition-all focus:outline-none ${
+                  activeTab === tab.key
+                    ? "bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white shadow-md"
+                    : "bg-white text-[#4e10d3] border border-[#8a0faf] hover:bg-[#f3eafd]"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Grid Container */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto">
+            {[...logos[activeTab]].map((logo: any, idx: number) => (
+              <div
+                key={logo.alt + idx}
+                className="group relative bg-white rounded-lg p-1 sm:p-1.5 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:border-[#8a0faf]/20"
+              >
+                <div className="aspect-square w-12 sm:w-14 flex items-center justify-center p-1 sm:p-1.5 mx-auto">
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    className={`w-8 h-8 sm:w-10 sm:h-10 object-contain transition-transform duration-300 group-hover:scale-110 ${
+                      "extra" in logo ? logo.extra : ""
+                    }`}
+                  />
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 items-center justify-items-center max-w-6xl mx-auto">
-                  {[...logos[activeTab]].map((logo: any, idx: number) => (
-                    <div
-                      key={logo.alt + idx}
-                      className="flex flex-col items-center gap-2 group"
-                    >
-                      <div className="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-white rounded-xl shadow-sm border border-gray-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:border-[#8a0faf]/20">
-                        <img
-                          src={logo.src}
-                          alt={logo.alt}
-                          className={`h-8 md:h-10 w-auto object-contain ${
-                            "extra" in logo ? logo.extra : ""
-                          }`}
-                        />
-                      </div>
-                      <span className="text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        {logo.alt}
-                      </span>
-                    </div>
-                  ))}
+                <div className="absolute inset-x-0 bottom-0 p-1 bg-gradient-to-t from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-center text-[10px] sm:text-xs text-gray-600 truncate">
+                    {logo.alt}
+                  </p>
                 </div>
-              </>
-            );
-          })()}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
       {/* Development & Design Approach - Animated Timeline */}
       <section className="py-20 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium text-lg">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-4 text-[#8a0faf] font-medium">
               Our Process
             </span>
             <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
@@ -1349,193 +1307,53 @@ const HomePage: React.FC = () => {
           <DevelopmentTimeline
             data={[
               {
-                title: "Team Assembly",
-                icon: <Users className="h-6 w-6 text-white" />,
+                title: "Requirements Analysis",
+                icon: <FileCheck className="w-5 h-5 text-white" />,
                 content: (
-                  <div>
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl font-normal mb-6">
-                      Building the perfect team with the right expertise and
-                      experience for your project needs.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#ff096c]/10 flex items-center justify-center flex-shrink-0">
-                          <Users className="h-5 w-5 text-[#ff096c]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Expert Selection
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Matching skills to project needs
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#8a0faf]/10 flex items-center justify-center flex-shrink-0">
-                          <GitBranch className="h-5 w-5 text-[#8a0faf]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Resource Planning
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Optimal team composition
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-gray-600">
+                    We begin by thoroughly understanding your needs, goals, and
+                    vision to create a comprehensive project roadmap.
+                  </p>
                 ),
               },
               {
-                title: "Strategic Planning",
-                icon: <FileCheck className="h-6 w-6 text-white" />,
+                title: "Design & Architecture",
+                icon: <Code className="w-5 h-5 text-white" />,
                 content: (
-                  <div>
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl font-normal mb-6">
-                      Developing comprehensive roadmaps and sprint plans to
-                      ensure project success.
-                    </p>
-                    <div className="mb-8">
-                      <div className="flex gap-3 items-center text-gray-600 text-base md:text-lg mb-4">
-                        <span className="text-[#8a0faf] text-xl">✓</span> Clear
-                        milestones and deliverables
-                      </div>
-                      <div className="flex gap-3 items-center text-gray-600 text-base md:text-lg mb-4">
-                        <span className="text-[#8a0faf] text-xl">✓</span> Risk
-                        assessment and mitigation
-                      </div>
-                      <div className="flex gap-3 items-center text-gray-600 text-base md:text-lg mb-4">
-                        <span className="text-[#8a0faf] text-xl">✓</span>{" "}
-                        Resource allocation strategy
-                      </div>
-                      <div className="flex gap-3 items-center text-gray-600 text-base md:text-lg">
-                        <span className="text-[#8a0faf] text-xl">✓</span>{" "}
-                        Timeline and budget planning
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-gray-600">
+                    Our team designs scalable architecture and creates detailed
+                    technical specifications for your project.
+                  </p>
                 ),
               },
               {
                 title: "Development",
-                icon: <Code className="h-6 w-6 text-white" />,
+                icon: <GitBranch className="w-5 h-5 text-white" />,
                 content: (
-                  <div>
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl font-normal mb-6">
-                      Implementing solutions using modern technologies and best
-                      practices.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#ff096c]/10 flex items-center justify-center flex-shrink-0">
-                          <Code className="h-5 w-5 text-[#ff096c]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Frontend Development
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Modern, responsive interfaces
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#8a0faf]/10 flex items-center justify-center flex-shrink-0">
-                          <Database className="h-5 w-5 text-[#8a0faf]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Backend Development
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Scalable architecture
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-gray-600">
+                    We implement your solution using modern technologies and
+                    best practices, with regular code reviews and testing.
+                  </p>
                 ),
               },
               {
-                title: "Quality Assurance",
-                icon: <FileCheck className="h-6 w-6 text-white" />,
+                title: "Testing & QA",
+                icon: <Database className="w-5 h-5 text-white" />,
                 content: (
-                  <div>
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl font-normal mb-6">
-                      Thorough testing to ensure top-notch quality and
-                      performance.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#ff096c]/10 flex items-center justify-center flex-shrink-0">
-                          <Code className="h-5 w-5 text-[#ff096c]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Automated Testing
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Comprehensive test coverage
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#8a0faf]/10 flex items-center justify-center flex-shrink-0">
-                          <Users className="h-5 w-5 text-[#8a0faf]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            User Testing
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Real-world validation
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-gray-600">
+                    Rigorous testing ensures your application is reliable,
+                    secure, and performs optimally under various conditions.
+                  </p>
                 ),
               },
               {
                 title: "Deployment",
-                icon: <Rocket className="h-6 w-6 text-white" />,
+                icon: <Rocket className="w-5 h-5 text-white" />,
                 content: (
-                  <div>
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl font-normal mb-6">
-                      Smooth deployment and continuous delivery of your
-                      solution.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#ff096c]/10 flex items-center justify-center flex-shrink-0">
-                          <Rocket className="h-5 w-5 text-[#ff096c]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Launch Strategy
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Controlled rollout process
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#8a0faf]/10 flex items-center justify-center flex-shrink-0">
-                          <GitBranch className="h-5 w-5 text-[#8a0faf]" />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
-                            Continuous Updates
-                          </h4>
-                          <p className="text-base text-gray-600 mt-2">
-                            Regular improvements
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="text-gray-600">
+                    We handle the deployment process and ensure your application
+                    runs smoothly in its intended environment.
+                  </p>
                 ),
               },
             ]}
@@ -1799,6 +1617,101 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      {/* Features Section */}
+      <section className="py-8 sm:py-16 md:py-24 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 rounded-full mb-3 sm:mb-4 text-[#8a0faf] text-sm sm:text-base font-medium"
+            >
+              Our Services
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4"
+            >
+              What We Offer
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto"
+            >
+              We provide comprehensive solutions to help your business thrive in
+              the digital age
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            {[
+              {
+                icon: <Code className="w-5 h-5 sm:w-6 sm:h-6 text-[#ff096c]" />,
+                title: "Custom Development",
+                description:
+                  "Tailored solutions built specifically for your business needs",
+              },
+              {
+                icon: (
+                  <Database className="w-5 h-5 sm:w-6 sm:h-6 text-[#8a0faf]" />
+                ),
+                title: "Cloud Solutions",
+                description:
+                  "Scalable and secure cloud infrastructure for your applications",
+              },
+              {
+                icon: (
+                  <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-[#ff096c]" />
+                ),
+                title: "Digital Transformation",
+                description:
+                  "Modernize your business with cutting-edge technology",
+              },
+              {
+                icon: (
+                  <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#8a0faf]" />
+                ),
+                title: "Enterprise Solutions",
+                description:
+                  "Robust systems designed for large-scale operations",
+              },
+              {
+                icon: (
+                  <Target className="w-5 h-5 sm:w-6 sm:h-6 text-[#ff096c]" />
+                ),
+                title: "Strategic Consulting",
+                description: "Expert guidance for your technology initiatives",
+              },
+              {
+                icon: (
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[#8a0faf]" />
+                ),
+                title: "Quality Assurance",
+                description:
+                  "Comprehensive testing and quality control processes",
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <FeatureCard {...feature} />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

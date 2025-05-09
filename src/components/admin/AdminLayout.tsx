@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   HiHome,
   HiViewGrid,
@@ -13,6 +13,7 @@ import {
   HiMenuAlt2,
   HiX,
   HiPlus,
+  HiOfficeBuilding,
 } from "react-icons/hi";
 
 interface AdminLayoutProps {
@@ -25,6 +26,12 @@ const navigation = [
     href: "/admin",
     icon: HiHome,
     description: "Overview and quick actions",
+  },
+  {
+    name: "Clients & Partners",
+    href: "/admin/clients",
+    icon: HiOfficeBuilding,
+    description: "Manage client logos and partners",
   },
   {
     name: "Projects",
@@ -69,8 +76,16 @@ const quickActions = [
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const router = useRouter();
+  const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Redirect if not authenticated
+    if (!user) {
+      router.replace("/admin/login");
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -85,7 +100,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      await logout();
       router.replace("/admin/login");
       toast.success("Logged out successfully");
     } catch (error) {
@@ -100,6 +115,10 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     }
     return router.pathname.startsWith(href);
   };
+
+  if (!user) {
+    return null; // Don't render anything while checking authentication
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -183,10 +202,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   <Link
                     key={action.name}
                     href={action.href}
-                    className="flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-gradient-to-r hover:opacity-90"
-                    style={{
-                      backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))`,
-                    }}
+                    className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-gradient-to-r ${action.color} hover:opacity-90`}
                   >
                     <action.icon className="w-5 h-5 mr-3" />
                     {action.name}
@@ -196,8 +212,12 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             </div>
           </nav>
 
-          {/* Logout Button */}
+          {/* User Info and Logout */}
           <div className="p-4 border-t">
+            <div className="mb-4 px-4 py-2 bg-gray-50 rounded-lg">
+              <p className="text-sm text-gray-600">Logged in as:</p>
+              <p className="text-sm font-medium text-gray-900">{user.email}</p>
+            </div>
             <button
               onClick={handleLogout}
               className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50"

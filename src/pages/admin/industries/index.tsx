@@ -1,23 +1,16 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/router";
+import {
+  getAllIndustries,
+  deleteIndustry,
+  Industry,
+} from "@/services/industryService";
 import AdminLayout from "@/components/admin/AdminLayout";
-import Link from "next/link";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { toast } from "react-toastify";
-import Image from "next/image";
+import { toast } from "react-hot-toast";
 
-interface Industry {
-  id: number;
-  name: string;
-  description: string;
-  image_url: string;
-  expertise: string[];
-  created_at: string;
-}
-
-const IndustriesManagement = () => {
+export default function IndustriesPage() {
   const [industries, setIndustries] = useState<Industry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetchIndustries();
@@ -25,134 +18,94 @@ const IndustriesManagement = () => {
 
   const fetchIndustries = async () => {
     try {
-      const { data, error } = await supabase
-        .from("industries")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-
-      setIndustries(data || []);
-    } catch (error: any) {
-      toast.error(error.message || "Error fetching industries");
-    } finally {
-      setIsLoading(false);
+      const data = await getAllIndustries();
+      setIndustries(data);
+    } catch (error) {
+      console.error("Error fetching industries:", error);
+      toast.error("Failed to fetch industries");
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this industry?"))
-      return;
+  const handleEdit = (id: string) => {
+    router.push(`/admin/industries/${id}`);
+  };
 
-    try {
-      const { error } = await supabase.from("industries").delete().eq("id", id);
-
-      if (error) throw error;
-
-      toast.success("Industry deleted successfully");
-      setIndustries(industries.filter((industry) => industry.id !== id));
-    } catch (error: any) {
-      toast.error(error.message || "Error deleting industry");
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this industry?")) {
+      try {
+        await deleteIndustry(id);
+        toast.success("Industry deleted successfully");
+        fetchIndustries();
+      } catch (error) {
+        console.error("Error deleting industry:", error);
+        toast.error("Failed to delete industry");
+      }
     }
   };
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Industries Management
-          </h1>
-          <Link href="/admin/industries/new">
-            <button className="flex items-center gap-2 bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white py-2 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity">
-              <FaPlus className="w-4 h-4" />
-              Add New Industry
-            </button>
-          </Link>
+          <h1 className="text-2xl font-bold">Industries</h1>
+          <button
+            onClick={() => router.push("/admin/industries/new")}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Add New Industry
+          </button>
         </div>
 
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a0faf] mx-auto"></div>
-          </div>
-        ) : industries.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow">
-            <p className="text-gray-600">
-              No industries found. Add your first industry!
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {industries.map((industry) => (
-              <div
-                key={industry.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden"
-              >
-                <div className="h-48 relative">
-                  <Image
-                    src={
-                      industry.image_url || "/images/placeholder-industry.jpg"
-                    }
-                    alt={industry.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h2 className="text-xl font-bold text-white">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {industries.map((industry) => (
+                <tr key={industry.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">
                       {industry.name}
-                    </h2>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {industry.description}
-                  </p>
-
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium text-gray-700">
-                      Areas of Expertise:
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {industry.expertise.map((item, index) => (
-                        <span
-                          key={index}
-                          className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
-                        >
-                          {item}
-                        </span>
-                      ))}
                     </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between">
+                  </td>
+                  <td className="px-6 py-4">
                     <div className="text-sm text-gray-500">
-                      Added on{" "}
-                      {new Date(industry.created_at).toLocaleDateString()}
+                      {industry.description.length > 100
+                        ? `${industry.description.substring(0, 100)}...`
+                        : industry.description}
                     </div>
-                    <div className="flex gap-2">
-                      <Link href={`/admin/industries/${industry.id}/edit`}>
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                          <FaEdit className="w-5 h-5" />
-                        </button>
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(industry.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <FaTrash className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEdit(industry.id)}
+                      className="text-blue-600 hover:text-blue-900 mr-4"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(industry.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </AdminLayout>
   );
-};
-
-export default IndustriesManagement;
+}

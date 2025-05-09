@@ -1,166 +1,132 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { Formik, Form, Field, FormikErrors, FormikTouched } from "formik";
-import * as Yup from "yup";
-import { supabase } from "@/lib/supabase";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-const LoginSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Required"),
-});
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const AdminLogin = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, user, loading: authLoading, initialized } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (values: LoginFormValues) => {
-    if (isLoading) return;
+  useEffect(() => {
+    if (initialized && user && router.pathname !== "/admin") {
+      router.replace("/admin");
+    }
+  }, [initialized, user, router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loading) return;
+
+    setLoading(true);
 
     try {
-      setIsLoading(true);
-      console.log("Attempting login with email:", values.email);
-
-      // First, sign out to clear any existing sessions
-      await supabase.auth.signOut();
-
-      // Attempt to sign in
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        console.log("Login successful, session obtained");
-
-        // Set the session cookie
-        const response = await fetch("/api/auth/set-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            event: "SIGNED_IN",
-            session: data.session,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to set session cookie");
-        }
-
-        toast.success("Login successful!");
-
-        // Force a hard navigation to /admin
-        window.location.href = "/admin";
+      await login(email, password);
+      toast.success("Logged in successfully");
+      if (router.pathname !== "/admin") {
+        router.replace("/admin");
       }
     } catch (error: any) {
       console.error("Login error:", error);
-      toast.error(error.message || "An error occurred during login");
+      toast.error(error.message || "Failed to login");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-r from-[#15181e] to-[#4e10d3] flex items-center justify-center p-4"
-    >
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-6 w-[200px] h-[50px] relative">
-            <Image
-              src="/images/logo-2.png"
-              alt="DEAZY Tech Solutions"
-              width={200}
-              height={50}
-              priority
-              style={{ objectFit: "contain" }}
-            />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800">Admin Login</h1>
-          <p className="text-gray-600 mt-2">Sign in to manage your website</p>
-        </div>
+  // Show loading state while checking auth
+  if (!initialized || authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#8a0faf]"></div>
+      </div>
+    );
+  }
 
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={LoginSchema}
-          onSubmit={handleLogin}
-        >
-          {({
-            errors,
-            touched,
-          }: {
-            errors: FormikErrors<LoginFormValues>;
-            touched: FormikTouched<LoginFormValues>;
-          }) => (
-            <Form className="space-y-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email Address
-                </label>
-                <Field
+  // Redirect if already authenticated
+  if (user) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="flex justify-center">
+          <Image
+            src="/images/logo-2.png"
+            alt="Logo"
+            width={48}
+            height={48}
+            className="w-12 h-12"
+            priority
+          />
+        </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Admin Login
+        </h2>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <div className="mt-1">
+                <input
                   id="email"
                   name="email"
                   type="email"
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                  placeholder="admin@example.com"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#8a0faf] focus:border-[#8a0faf] sm:text-sm"
                 />
-                {errors.email && touched.email && (
-                  <div className="text-red-600 text-sm mt-1">
-                    {errors.email as string}
-                  </div>
-                )}
               </div>
+            </div>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password
-                </label>
-                <Field
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <div className="mt-1">
+                <input
                   id="password"
                   name="password"
                   type="password"
-                  className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-[#8a0faf] focus:border-[#8a0faf]"
-                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#8a0faf] focus:border-[#8a0faf] sm:text-sm"
                 />
-                {errors.password && touched.password && (
-                  <div className="text-red-600 text-sm mt-1">
-                    {errors.password as string}
-                  </div>
-                )}
               </div>
+            </div>
 
+            <div>
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-[#ff096c] to-[#8a0faf] text-white py-3 px-6 rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                disabled={loading || authLoading}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-[#ff096c] to-[#8a0faf] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8a0faf] disabled:opacity-50"
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {loading ? "Logging in..." : "Login"}
               </button>
-            </Form>
-          )}
-        </Formik>
+            </div>
+          </form>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

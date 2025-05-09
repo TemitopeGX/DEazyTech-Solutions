@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { supabase } from "@/lib/supabase";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { HiPencil, HiTrash, HiPlus, HiSearch } from "react-icons/hi";
@@ -31,13 +39,17 @@ const ExpertsPage = () => {
 
   const fetchExperts = async () => {
     try {
-      const { data, error } = await supabase
-        .from("experts")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const q = query(collection(db, "experts"), orderBy("created_at", "desc"));
+      const querySnapshot = await getDocs(q);
+      const expertsData = querySnapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Expert)
+      );
 
-      if (error) throw error;
-      setExperts(data || []);
+      setExperts(expertsData);
     } catch (error) {
       console.error("Error fetching experts:", error);
       toast.error("Failed to load experts");
@@ -50,9 +62,7 @@ const ExpertsPage = () => {
     if (!window.confirm("Are you sure you want to delete this expert?")) return;
 
     try {
-      const { error } = await supabase.from("experts").delete().eq("id", id);
-      if (error) throw error;
-
+      await deleteDoc(doc(db, "experts", id));
       setExperts(experts.filter((expert) => expert.id !== id));
       toast.success("Expert deleted successfully");
     } catch (error) {

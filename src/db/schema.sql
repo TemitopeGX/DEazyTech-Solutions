@@ -1,0 +1,101 @@
+-- Create database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS deazytech;
+USE deazytech;
+
+-- Industries table
+CREATE TABLE IF NOT EXISTS industries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  image_url VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Services table
+CREATE TABLE IF NOT EXISTS services (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  image_url VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Service features table
+CREATE TABLE IF NOT EXISTS service_features (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_id INT NOT NULL,
+  feature TEXT NOT NULL,
+  FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+);
+
+-- Service benefits table
+CREATE TABLE IF NOT EXISTS service_benefits (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  service_id INT NOT NULL,
+  benefit TEXT NOT NULL,
+  FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+);
+
+-- Experts table
+CREATE TABLE IF NOT EXISTS experts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL,
+  bio TEXT,
+  image_url VARCHAR(255),
+  experience VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Expert expertise table (for many-to-many relationship)
+CREATE TABLE IF NOT EXISTS expert_expertise (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  expert_id INT NOT NULL,
+  expertise VARCHAR(255) NOT NULL,
+  FOREIGN KEY (expert_id) REFERENCES experts(id) ON DELETE CASCADE
+);
+
+-- Testimonials table
+CREATE TABLE IF NOT EXISTS testimonials (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role VARCHAR(255),
+  company VARCHAR(255),
+  content TEXT NOT NULL,
+  image_url VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Projects table
+CREATE TABLE IF NOT EXISTS projects (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(50),
+  image_url VARCHAR(255),
+  link VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Project technologies table
+CREATE TABLE IF NOT EXISTS project_technologies (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  project_id INT NOT NULL,
+  technology VARCHAR(255) NOT NULL,
+  FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- Users table for authentication
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('admin', 'user') DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+); 
