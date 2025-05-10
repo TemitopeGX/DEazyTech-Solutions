@@ -60,35 +60,32 @@ export const addClient = async (
 
 export const updateClient = async (
   id: string,
-  data: Partial<ClientInput>,
+  updates: Partial<ClientInput>,
   logoFile?: File
 ): Promise<void> => {
   try {
-    // Get the existing client data
     const existingClient = await getClient(id);
     if (!existingClient) {
       throw new Error("Client not found");
     }
 
-    // Create a complete ClientInput object by merging existing data with updates
-    const updatedData: ClientInput = {
-      name: data.name !== undefined ? data.name : existingClient.name,
-      website:
-        data.website !== undefined ? data.website : existingClient.website,
-      category:
-        data.category !== undefined ? data.category : existingClient.category,
+    // Create a complete ClientInput object
+    const completeData: ClientInput = {
+      name: updates.name || existingClient.name,
+      website: updates.website || existingClient.website,
+      category: updates.category || existingClient.category,
     };
 
-    // Delete old document
+    // Delete the old document
     await deleteDoc(doc(db, "clients", id));
 
     if (logoFile) {
-      // If there's a new logo, use addClient which handles file upload
-      await addClient(updatedData, logoFile);
+      // If there's a new logo, use addClient with complete data
+      await addClient(completeData, logoFile);
     } else {
-      // If no new logo, create document with existing logo
-      const docRef = await addDoc(collection(db, "clients"), {
-        ...updatedData,
+      // If no new logo, preserve the existing one
+      await addDoc(collection(db, "clients"), {
+        ...completeData,
         logo: existingClient.logo,
         created_at: existingClient.created_at,
       });
