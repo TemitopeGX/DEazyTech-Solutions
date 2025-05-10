@@ -151,4 +151,4 @@ For support, email contact@deazytech.com or create an issue in the repository.
 
 ---
 
-Built with ❤️ by DEazy Tech Solutions Team
+Developed by TemitopeGX
