@@ -257,7 +257,7 @@ const HireExpertsPage: React.FC = () => {
         {/* Stats Section */}
         <section className="py-20 relative overflow-hidden">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {[
                 { value: "5+", label: "Years of Experience" },
                 { value: "100+", label: "Projects Completed" },
@@ -272,11 +272,13 @@ const HireExpertsPage: React.FC = () => {
                   viewport={{ once: true }}
                   className="group relative"
                 >
-                  <div className="p-6 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-[#ff096c]/50 transition-all duration-300">
-                    <div className="text-[#ff096c] text-4xl font-bold mb-2">
+                  <div className="p-4 md:p-6 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-[#ff096c]/50 transition-all duration-300">
+                    <div className="text-[#ff096c] text-3xl md:text-4xl font-bold mb-2">
                       {stat.value}
                     </div>
-                    <div className="text-muted-foreground">{stat.label}</div>
+                    <div className="text-sm md:text-base text-muted-foreground">
+                      {stat.label}
+                    </div>
                   </div>
                 </motion.div>
               ))}

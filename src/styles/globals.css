@@ -101,6 +101,11 @@
   }
 }
 
+.py-20 {
+  padding-top: 0rem;
+  padding-bottom: 5rem;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {

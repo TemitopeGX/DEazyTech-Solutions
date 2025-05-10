@@ -83,7 +83,7 @@ export default function ContactPage() {
         {/* Contact Information Cards */}
         <section className="py-20 relative">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {[
                 {
                   icon: Mail,
@@ -124,14 +124,16 @@ export default function ContactPage() {
                   >
                     <Card className="relative overflow-hidden border-border/50 bg-background/50 backdrop-blur-sm hover:border-[#ff096c]/50 transition-all duration-300">
                       <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/5 to-[#8a0faf]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="relative p-6">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ff096c] to-[#8a0faf] p-2.5 mb-4">
+                      <div className="relative p-4 md:p-6">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-[#ff096c] to-[#8a0faf] p-2 md:p-2.5 mb-3 md:mb-4">
                           <item.icon className="w-full h-full text-white" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">
+                        <h3 className="text-base md:text-lg font-semibold mb-1 md:mb-2">
                           {item.title}
                         </h3>
-                        <p className="text-muted-foreground">{item.content}</p>
+                        <p className="text-sm md:text-base text-muted-foreground">
+                          {item.content}
+                        </p>
                       </div>
                     </Card>
                   </a>
