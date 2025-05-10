@@ -2,7 +2,7 @@
 
 A modern, responsive website for DEazy Tech Solutions built with Next.js, TypeScript, and Tailwind CSS. The website showcases the company's services, expertise, and professional team while providing an intuitive interface for potential clients to get in touch.
 
-![DEazy Tech Solutions](public/images/preview.png)
+![DEazy Tech Solutions](public/images/logo-white.png)
 
 ## 🚀 Features
 
