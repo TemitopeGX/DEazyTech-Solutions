@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import formidable, { File } from "formidable";
-import fs from "fs";
+import formidable from "formidable";
+import fs from "fs/promises";
 
 export const config = {
   api: {
@@ -19,7 +19,7 @@ export default async function handler(
   try {
     const form = formidable({
       keepExtensions: true,
-      multiples: true,
+      maxFileSize: 10 * 1024 * 1024, // 10MB
     });
 
     const [fields, files] = await new Promise<
@@ -39,22 +39,23 @@ export default async function handler(
       return res.status(400).json({ error: "No image file provided" });
     }
 
-    // Read the file
-    const imageData = fs.readFileSync(file.filepath);
+    // Read the file as a buffer
+    const imageBuffer = await fs.readFile(file.filepath);
 
-    // Create response with image data
-    const response = {
-      data: imageData,
-      contentType: file.mimetype,
-      filename: file.originalFilename,
-    };
+    // Clean up the temporary file
+    await fs.unlink(file.filepath);
 
-    // Clean up the temp file
-    fs.unlinkSync(file.filepath);
-
-    res.status(200).json(response);
+    return res.status(200).json({
+      success: true,
+      file: {
+        buffer: imageBuffer,
+        mimetype: file.mimetype,
+        originalFilename: file.originalFilename,
+        size: file.size,
+      },
+    });
   } catch (error) {
     console.error("Error processing image upload:", error);
-    res.status(500).json({ error: "Error processing image upload" });
+    return res.status(500).json({ error: "Failed to process image upload" });
   }
 }

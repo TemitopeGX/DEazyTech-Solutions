@@ -10,11 +10,17 @@ export default async function handler(
   }
 
   try {
-    // Try to connect to MongoDB
     const conn = await connectDB();
 
+    if (!conn) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to establish database connection",
+      });
+    }
+
     // Get connection state
-    const connectionState = conn.connection.readyState;
+    const connectionState = conn.readyState;
 
     const states = {
       0: "disconnected",
@@ -23,26 +29,20 @@ export default async function handler(
       3: "disconnecting",
     };
 
-    if (connectionState === 1) {
-      res.status(200).json({
-        success: true,
-        message: "Successfully connected to MongoDB",
-        state: states[connectionState],
-        database: conn.connection.db.databaseName,
-      });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: "Not connected to MongoDB",
-        state: states[connectionState],
-      });
-    }
+    const stateMessage =
+      states[connectionState as keyof typeof states] || "unknown";
+
+    return res.status(200).json({
+      success: connectionState === 1,
+      message: `Database ${stateMessage}`,
+      state: stateMessage,
+      database: conn.name,
+    });
   } catch (error) {
-    console.error("MongoDB connection error:", error);
-    res.status(500).json({
+    console.error("Database connection test error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Failed to connect to MongoDB",
-      error: error instanceof Error ? error.message : "Unknown error",
+      message: "Failed to test database connection",
     });
   }
 }
