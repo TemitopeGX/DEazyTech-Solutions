@@ -13,14 +13,18 @@ import {
   uploadIndustryImage,
   deleteIndustryImage,
   Industry,
-} from "@/services/industryService";
+} from "@/lib/services/industryService";
 
-type FormData = Omit<Industry, "id">;
+type FormData = {
+  name: string;
+  description: string;
+  image_url: string;
+};
 
 const IndustrySchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   description: Yup.string().required("Required"),
-  imageUrl: Yup.string().required("Required"),
+  image_url: Yup.string().required("Required"),
   expertise: Yup.array()
     .of(Yup.string().required("Required"))
     .min(1, "Add at least one area of expertise"),
@@ -34,7 +38,7 @@ export default function IndustryForm() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
-    imageUrl: "",
+    image_url: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,17 +46,17 @@ export default function IndustryForm() {
 
   useEffect(() => {
     if (!isNew && id && typeof id === "string") {
-      fetchIndustry(id);
+      fetchIndustry(parseInt(id, 10));
     }
   }, [id, isNew]);
 
-  const fetchIndustry = async (industryId: string) => {
+  const fetchIndustry = async (industryId: number) => {
     try {
       const industry = await getIndustryById(industryId);
       if (industry) {
-        const { name, description, imageUrl } = industry;
-        setFormData({ name, description, imageUrl });
-        setImagePreview(imageUrl);
+        const { name, description, image_url } = industry;
+        setFormData({ name, description, image_url });
+        setImagePreview(image_url);
       }
     } catch (error) {
       console.error("Error fetching industry:", error);
@@ -83,28 +87,28 @@ export default function IndustryForm() {
     setIsLoading(true);
 
     try {
-      let imageUrl = formData.imageUrl;
+      let image_url = formData.image_url;
 
       if (imageFile) {
         // Delete old image if it exists
-        if (formData.imageUrl) {
-          await deleteIndustryImage(formData.imageUrl);
+        if (formData.image_url) {
+          await deleteIndustryImage(formData.image_url);
         }
         // Upload new image
-        imageUrl = await uploadIndustryImage(imageFile);
+        image_url = await uploadIndustryImage(imageFile);
       }
 
       const industryData: FormData = {
         name: formData.name,
         description: formData.description,
-        imageUrl,
+        image_url,
       };
 
       if (isNew) {
         await createIndustry(industryData);
         toast.success("Industry created successfully");
       } else if (typeof id === "string") {
-        await updateIndustry(id, industryData);
+        await updateIndustry(parseInt(id, 10), industryData);
         toast.success("Industry updated successfully");
       }
 
