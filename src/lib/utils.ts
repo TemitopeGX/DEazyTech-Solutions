@@ -1,7 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { storage } from "./firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,4 +54,20 @@ export const validateImageFile = (file: File): boolean => {
   }
 
   return true;
+};
+
+export const deleteFile = async (fileUrl: string): Promise<void> => {
+  try {
+    // Extract the path from the Firebase Storage URL
+    const decodedUrl = decodeURIComponent(fileUrl);
+    const baseUrl =
+      "https://firebasestorage.googleapis.com/v0/b/deazytech-solution.firebasestorage.app/o/";
+    const storagePath = decodedUrl.replace(baseUrl, "").split("?")[0];
+
+    const storageRef = ref(storage, storagePath);
+    await deleteObject(storageRef);
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error;
+  }
 };

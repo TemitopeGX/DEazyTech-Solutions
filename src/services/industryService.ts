@@ -1,4 +1,5 @@
 import { query, queryOne, transaction } from "@/lib/mysql";
+import { uploadFile, deleteFile } from "@/lib/utils";
 
 export interface Industry {
   id: number;
@@ -98,6 +99,26 @@ export async function deleteIndustry(id: number): Promise<void> {
     await query("DELETE FROM industries WHERE id = ?", [id]);
   } catch (error) {
     console.error("Error deleting industry:", error);
+    throw error;
+  }
+}
+
+export async function uploadIndustryImage(file: File): Promise<string> {
+  try {
+    const fileName = `industries/${Date.now()}-${file.name}`;
+    const imageUrl = await uploadFile(file, fileName);
+    return imageUrl;
+  } catch (error) {
+    console.error("Error uploading industry image:", error);
+    throw error;
+  }
+}
+
+export async function deleteIndustryImage(imageUrl: string): Promise<void> {
+  try {
+    await deleteFile(imageUrl);
+  } catch (error) {
+    console.error("Error deleting industry image:", error);
     throw error;
   }
 }
