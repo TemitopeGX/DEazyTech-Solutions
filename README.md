@@ -1,40 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# DEazy Tech Solutions
 
-## Getting Started
+A modern, responsive website for DEazy Tech Solutions built with Next.js, TypeScript, and Tailwind CSS. The website showcases the company's services, expertise, and professional team while providing an intuitive interface for potential clients to get in touch.
 
-First, run the development server:
+![DEazy Tech Solutions](public/images/preview.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Modern Design**: Sleek, professional UI with smooth animations and transitions
+- **Fully Responsive**: Optimized for all device sizes from mobile to desktop
+- **Performance Optimized**: Fast loading times and optimized assets
+- **SEO Ready**: Built with SEO best practices in mind
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 🎯 Key Sections
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- **Homepage**: Company overview and key services
+- **Services**: Detailed information about offered services
+- **Hire Experts**: Team profiles and expertise areas
+- **Contact**: Easy-to-use contact form and company information
+- **Admin Dashboard**: Secure admin panel for content management
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**:
 
-## Learn More
+  - Next.js 14.1.0
+  - TypeScript
+  - Tailwind CSS
+  - Framer Motion
+  - Lucide Icons
+  - Shadcn UI Components
 
-To learn more about Next.js, take a look at the following resources:
+- **Form Handling**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+  - Formik
+  - Yup Validation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Notifications**:
+  - React Hot Toast
 
-## Deploy on Vercel
+## 📦 Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+   ```bash
+   git clone https://github.com/TemitopeGX/DEazyTech-Solutions.git
+   cd DEazyTech-Solutions
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory and add the following:
+
+   ```env
+   NEXT_PUBLIC_API_URL=your_api_url
+   DATABASE_URL=your_database_url
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+## 🔧 Configuration
+
+### Database Setup
+
+The project uses MySQL for data storage. Make sure to:
+
+1. Create a MySQL database
+2. Update the database connection string in `.env.local`
+3. Run migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+### Admin Access
+
+To access the admin dashboard:
+
+1. Create an admin user in the database
+2. Visit `/admin/login`
+3. Use your credentials to log in
+
+## 📱 Responsive Design
+
+The website is fully responsive with breakpoints at:
+
+- Mobile: 320px - 767px
+- Tablet: 768px - 1023px
+- Desktop: 1024px and above
+
+## 🎨 Customization
+
+### Colors
+
+The main color scheme uses:
+
+- Primary: `#ff096c` (Pink)
+- Secondary: `#8a0faf` (Purple)
+- Background: Dynamic (light/dark mode)
+- Text: Dynamic (light/dark mode)
+
+### Typography
+
+- Headings: System font stack
+- Body: System font stack
+- Custom fonts can be added via Tailwind CSS configuration
+
+## 🚀 Deployment
+
+The project is configured for deployment on Vercel:
+
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables
+3. Deploy with zero configuration
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a pull request
+
+## 📞 Support
+
+For support, email contact@deazytech.com or create an issue in the repository.
+
+## 🙏 Acknowledgments
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Framer Motion](https://www.framer.com/motion)
+- [Shadcn UI](https://ui.shadcn.com)
+
+---
+
+Built with ❤️ by DEazy Tech Solutions Team
