@@ -3,7 +3,12 @@ const nextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com"],
+    domains: [
+      "images.unsplash.com",
+      "localhost",
+      "www.vectorlogo.zone",
+      "cdn.jsdelivr.net",
+    ],
   },
 };
 

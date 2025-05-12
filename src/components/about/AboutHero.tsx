@@ -3,278 +3,222 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Circle } from "lucide-react";
+import { ArrowRight, Star, Award, Users } from "lucide-react";
 import Link from "next/link";
 
-function ElegantShape({
-  className,
-  delay = 0,
-  width = 400,
-  height = 100,
-  rotate = 0,
-  gradient = "from-white/[0.08]",
-}: {
-  className?: string;
-  delay?: number;
-  width?: number;
-  height?: number;
-  rotate?: number;
-  gradient?: string;
-}) {
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        y: -150,
-        rotate: rotate - 15,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        rotate: rotate,
-      }}
-      transition={{
-        duration: 2.4,
-        delay,
-        ease: [0.23, 0.86, 0.39, 0.96],
-        opacity: { duration: 1.2 },
-      }}
-      className={cn("absolute", className)}
-    >
-      <motion.div
-        animate={{
-          y: [0, 15, 0],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-        style={{
-          width,
-          height,
-        }}
-        className="relative"
-      >
-        <div
-          className={cn(
-            "absolute inset-0 rounded-full",
-            "bg-gradient-to-r to-transparent",
-            gradient,
-            "backdrop-blur-[2px] border-2 border-white/[0.15]",
-            "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
-            "after:absolute after:inset-0 after:rounded-full",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
-          )}
-        />
-      </motion.div>
-    </motion.div>
-  );
+interface Achievement {
+  number: string;
+  label: string;
 }
 
-interface HeroAction {
+interface Action {
   label: string;
   href: string;
-  variant?: "default" | "outline" | "secondary" | "ghost" | "link";
+  variant: "default" | "outline";
 }
 
 interface AboutHeroProps {
-  className?: string;
   badge?: string;
   title?: string;
   subtitle?: string;
   description?: string;
-  achievements?: { number: string; label: string }[];
-  actions?: HeroAction[];
+  achievements?: Achievement[];
+  actions?: Action[];
 }
 
 export function AboutHero({
-  className,
-  badge = "Our Story",
-  title = "Transforming Digital Experiences",
-  subtitle = "Since 2010",
-  description = "We've been on a mission to create exceptional digital experiences that drive business growth and user engagement. Our journey has been defined by innovation, creativity, and a relentless pursuit of excellence.",
-  achievements = [
-    { number: "10+", label: "Years Experience" },
-    { number: "200+", label: "Projects Completed" },
-    { number: "50+", label: "Team Members" },
-  ],
-  actions = [
-    {
-      label: "Our Services",
-      href: "#services",
-      variant: "outline",
-    },
-    {
-      label: "Contact Us",
-      href: "#contact",
-      variant: "default",
-    },
-  ],
+  badge = "Welcome to DEAZY Tech",
+  title = "We Create Digital Excellence",
+  subtitle = "Leading Software Development",
+  description = "Transforming ideas into powerful digital solutions since 2010. We combine innovation, expertise, and creativity to deliver exceptional results that drive business success.",
+  achievements = [],
+  actions = [],
 }: AboutHeroProps) {
-  const fadeUpVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 1,
-        delay: 0.5 + i * 0.2,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    }),
-  };
+  const stats = [
+    {
+      icon: Star,
+      value: "10+",
+      label: "Years Experience",
+      gradient: "from-rose to-mauveine",
+      delay: 0.4,
+    },
+    {
+      icon: Award,
+      value: "200+",
+      label: "Projects Completed",
+      gradient: "from-mauveine to-chrysler-blue",
+      delay: 0.5,
+    },
+    {
+      icon: Users,
+      value: "50+",
+      label: "Team Members",
+      gradient: "from-chrysler-blue to-rose",
+      delay: 0.6,
+    },
+  ];
 
   return (
-    <div className="relative min-h-[80vh] w-full flex items-center justify-center overflow-hidden bg-background pt-20">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#ff096c]/[0.05] via-transparent to-[#8a0faf]/[0.05] blur-3xl" />
+    <div className="relative min-h-[85vh] w-full overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50/50 pt-24">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        {/* Animated grid pattern */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(138,15,175,0.03)_1px,transparent_1px),linear-gradient(to_right,rgba(255,9,108,0.03)_1px,transparent_1px)] bg-[size:32px_32px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_100%_200px,rgba(255,9,108,0.05),transparent)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_0%_300px,rgba(138,15,175,0.05),transparent)]" />
+        </div>
 
-      <motion.div
-        animate={{
-          y: [0, -20, 0],
-          transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-        }}
-        className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-gradient-to-r from-[#ff096c]/20 to-[#8a0faf]/20 blur-xl"
-      />
-      <motion.div
-        animate={{
-          y: [0, 20, 0],
-          transition: {
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          },
-        }}
-        className="absolute bottom-1/4 right-1/4 w-32 h-32 rounded-full bg-gradient-to-r from-[#8a0faf]/20 to-[#ff096c]/20 blur-xl"
-      />
-
-      <div className="absolute inset-0 overflow-hidden">
-        <ElegantShape
-          delay={0.3}
-          width={600}
-          height={140}
-          rotate={12}
-          gradient="from-[#ff096c]/[0.15]"
-          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-        />
-
-        <ElegantShape
-          delay={0.5}
-          width={500}
-          height={120}
-          rotate={-15}
-          gradient="from-[#8a0faf]/[0.15]"
-          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
-        />
-
-        <ElegantShape
-          delay={0.4}
-          width={300}
-          height={80}
-          rotate={-8}
-          gradient="from-[#ff096c]/[0.15]"
-          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-        />
-
-        <ElegantShape
-          delay={0.6}
-          width={200}
-          height={60}
-          rotate={20}
-          gradient="from-[#8a0faf]/[0.15]"
-          className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-        />
+        {/* Animated shapes */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.2, 0.3],
+                left: ["0%", "100%", "0%"],
+                top: [(i + 1) * 30 + "%"],
+              }}
+              transition={{
+                duration: 15 + i * 2,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              <div
+                className={cn(
+                  "w-[300px] h-[300px] rounded-full",
+                  "bg-gradient-to-r from-rose/10 to-mauveine/10",
+                  "blur-3xl"
+                )}
+              />
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            custom={0}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 mb-6"
-          >
-            <Circle className="h-2 w-2 fill-[#ff096c]" />
-            <span className="text-sm font-medium text-[#8a0faf]">{badge}</span>
-          </motion.div>
-
-          <motion.div
-            custom={1}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="text-center md:text-left"
-          >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#ff096c] to-[#8a0faf]">
-                {title}
-              </span>
-              <br />
-              <span className="text-foreground">{subtitle}</span>
-            </h1>
-          </motion.div>
-
-          <motion.div
-            custom={2}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-              {description}
-            </p>
-          </motion.div>
-
-          <motion.div
-            custom={3}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8"
-          >
-            {achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className="p-4 rounded-xl border border-border/20 bg-gradient-to-br from-white/50 to-white/30 backdrop-blur-sm hover:border-[#ff096c]/20 transition-colors duration-300"
+      <div className="container mx-auto px-4 relative">
+        <div className="max-w-6xl mx-auto">
+          {/* Main Content */}
+          <div className="text-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-rose/10 via-mauveine/10 to-chrysler-blue/10 text-rose font-medium text-sm"
               >
-                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#ff096c] to-[#8a0faf] bg-clip-text text-transparent">
-                  {achievement.number}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {achievement.label}
-                </div>
+                {badge}
+              </motion.span>
+
+              <div className="relative">
+                <motion.h1
+                  className="text-6xl md:text-8xl font-bold leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                >
+                  {title.split(" ").map((word, i) => (
+                    <React.Fragment key={i}>
+                      {i > 0 && <br />}
+                      {i === title.split(" ").length - 1 ? (
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose via-mauveine to-chrysler-blue animate-gradient">
+                          {word}
+                        </span>
+                      ) : (
+                        word
+                      )}
+                    </React.Fragment>
+                  ))}
+                </motion.h1>
+
+                {/* Decorative elements */}
+                <motion.div
+                  className="absolute -right-4 top-0 w-24 h-24 rounded-full bg-gradient-to-r from-rose/20 to-mauveine/20 blur-2xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.3, 0.5] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -left-4 bottom-0 w-24 h-24 rounded-full bg-gradient-to-r from-mauveine/20 to-chrysler-blue/20 blur-2xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.3, 0.5] }}
+                  transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                />
               </div>
-            ))}
-          </motion.div>
 
-          <motion.div
-            custom={4}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-wrap gap-4 justify-center md:justify-start"
-          >
-            {actions.map((action, index) => (
-              <Button
-                key={index}
-                variant={action.variant}
-                className={cn(
-                  "px-6 py-2.5",
-                  action.variant === "default" &&
-                    "bg-gradient-to-r from-[#ff096c] to-[#8a0faf] hover:opacity-90"
-                )}
-                asChild
+              <motion.p
+                className="text-xl text-gray-600 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <Link href={action.href}>{action.label}</Link>
-              </Button>
+                {description}
+              </motion.p>
+
+              {/* CTA Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex flex-col sm:flex-row justify-center gap-4 pt-8"
+              >
+                {actions.map((action, index) => (
+                  <Link
+                    key={action.label}
+                    href={action.href}
+                    className={cn(
+                      "inline-flex items-center px-8 py-4 rounded-xl font-medium group transition-all duration-300",
+                      action.variant === "outline"
+                        ? "bg-white border border-rose/20 text-gray-800 hover:bg-rose/5"
+                        : "bg-gradient-to-r from-rose to-mauveine text-white hover:shadow-lg hover:scale-105"
+                    )}
+                  >
+                    {action.label}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                ))}
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Stats Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8"
+          >
+            {stats.map((stat) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: stat.delay }}
+                className="group relative"
+              >
+                <div className="relative z-10 bg-white/80 backdrop-blur-lg rounded-2xl p-8 border border-gray-200 hover:border-rose/20 transition-all duration-300 hover:shadow-xl">
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.gradient} p-2.5 text-white mb-4 group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <stat.icon className="w-full h-full" />
+                  </div>
+                  <div className="text-4xl font-bold bg-gradient-to-r from-rose to-mauveine text-transparent bg-clip-text mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-gray-600 font-medium">{stat.label}</div>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-rose/10 to-mauveine/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300" />
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
-
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 }

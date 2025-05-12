@@ -1,125 +1,191 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { ArrowRight, Code, Users, Target, Award } from "lucide-react";
 
 export function OurStory() {
-  return (
-    <section className="w-full py-12 bg-background relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c05_1px,transparent_1px),linear-gradient(-45deg,#8a0faf05_1px,transparent_1px)] bg-[size:32px_32px]" />
+  const milestones = [
+    {
+      year: "2015",
+      title: "Company Founded",
+      description: "Started with a vision to transform digital experiences",
+      icon: Code,
+    },
+    {
+      year: "2017",
+      title: "Global Expansion",
+      description: "Expanded operations to serve clients worldwide",
+      icon: Target,
+    },
+    {
+      year: "2018",
+      title: "10+ Team Members",
+      description: "Grew our talented team of experts",
+      icon: Users,
+    },
+    {
+      year: "2025 - Till Date",
+      title: "Industry Recognition",
+      description: "Received multiple awards for excellence",
+      icon: Award,
+    },
+  ];
 
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left side - Logo and visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="relative w-full aspect-square max-w-md mx-auto">
-              {/* Animated gradient background */}
-              <motion.div
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ff096c]/20 to-[#8a0faf]/20 blur-3xl"
-              />
-              <div className="relative z-10 w-full h-full p-8">
+  return (
+    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-white via-gray-50/50 to-white">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-rose/5 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-mauveine/5 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 right-1/3 w-96 h-96 bg-chrysler-blue/5 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative">
+        <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col items-center"
+            >
+              <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-rose/10 via-mauveine/10 to-chrysler-blue/10 text-rose font-medium text-sm mb-6">
+                Our Journey
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                The Story of{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose to-mauveine">
+                  Innovation
+                </span>
+              </h2>
+              <div className="w-24 h-1.5 bg-gradient-to-r from-rose to-mauveine rounded-full mb-6"></div>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                From our humble beginnings to becoming a leading software
+                development company, our journey has been defined by innovation,
+                dedication, and excellence.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative aspect-square rounded-2xl overflow-hidden">
+                {/* Background decoration */}
+                <div className="absolute inset-0 bg-gradient-to-br from-rose/10 to-mauveine/10"></div>
+
+                {/* Main image */}
                 <Image
                   src="/images/logo.png"
-                  alt="DEAZY Tech Solutions Logo"
+                  alt="Our Story"
                   fill
-                  className="object-contain"
+                  className="object-cover object-center"
                 />
+
+                {/* Overlay elements */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent"></div>
+
+                {/* Floating stats */}
+                <motion.div
+                  animate={{ y: [-10, 10, -10] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                >
+                  <div className="text-2xl font-bold bg-gradient-to-r from-rose to-mauveine text-transparent bg-clip-text">
+                    13+
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Years of Excellence
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  animate={{ y: [10, -10, 10] }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                  className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                >
+                  <div className="text-2xl font-bold bg-gradient-to-r from-rose to-mauveine text-transparent bg-clip-text">
+                    500+
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Projects Delivered
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Right Column - Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <div className="prose prose-lg">
+                <p className="text-gray-600 leading-relaxed">
+                  DEAZY Tech Solutions began with a vision to revolutionize the
+                  digital landscape. Our commitment to innovation and excellence
+                  has driven us to become a leading force in software
+                  development and digital transformation.
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  Today, we're proud to have helped hundreds of businesses
+                  achieve their digital goals through cutting-edge solutions and
+                  unwavering dedication to quality.
+                </p>
               </div>
 
-              {/* Decorative elements */}
-              <motion.div
-                animate={{
-                  y: [0, -10, 0],
-                  x: [0, 10, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute top-10 right-10 w-16 h-16 rounded-full bg-gradient-to-r from-[#ff096c]/30 to-[#8a0faf]/30 blur-lg"
-              />
-              <motion.div
-                animate={{
-                  y: [0, 10, 0],
-                  x: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1,
-                }}
-                className="absolute bottom-10 left-10 w-20 h-20 rounded-full bg-gradient-to-r from-[#8a0faf]/30 to-[#ff096c]/30 blur-lg"
-              />
-            </div>
-          </motion.div>
-
-          {/* Right side - Story content */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
-            <div className="inline-flex items-center justify-center px-4 py-1.5 text-sm rounded-full bg-gradient-to-r from-[#ff096c]/10 to-[#8a0faf]/10 text-[#8a0faf] font-medium">
-              Our Story
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              <span className="bg-gradient-to-r from-[#ff096c] to-[#8a0faf] bg-clip-text text-transparent">
-                Leading Software Development Company
-              </span>
-            </h2>
-            <div className="space-y-4">
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                DEAZY Tech Solutions Limited is a leading software development
-                company specializing in cutting-edge digital solutions for
-                businesses, institutions, and organizations. With a strong
-                background in web and mobile app development, we provide custom,
-                scalable, and high-performance solutions that drive success.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Our team consists of highly skilled developers, designers, and
-                IT experts dedicated to delivering innovative technology
-                solutions that enhance user experience and business efficiency.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 pt-4">
-              <div className="space-y-2">
-                <div className="text-3xl font-bold bg-gradient-to-r from-[#ff096c] to-[#8a0faf] bg-clip-text text-transparent">
-                  24/7
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Technical Support
-                </div>
+              {/* Milestones */}
+              <div className="space-y-6">
+                {milestones.map((milestone, index) => (
+                  <motion.div
+                    key={milestone.year}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="group flex items-start gap-4 p-4 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-rose/10 to-mauveine/10 flex items-center justify-center text-rose group-hover:scale-110 transition-transform duration-300">
+                        <milestone.icon className="w-6 h-6" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-semibold bg-gradient-to-r from-rose to-mauveine text-transparent bg-clip-text">
+                          {milestone.year}
+                        </span>
+                        <span className="text-lg font-semibold text-gray-900">
+                          {milestone.title}
+                        </span>
+                      </div>
+                      <p className="text-gray-600">{milestone.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold bg-gradient-to-r from-[#ff096c] to-[#8a0faf] bg-clip-text text-transparent">
-                  100%
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Custom Solutions
-                </div>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

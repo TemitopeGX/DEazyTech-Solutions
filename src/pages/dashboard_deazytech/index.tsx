@@ -15,6 +15,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { useRouter } from "next/router";
+import { projectsApi, expertsApi, authApi } from "@/lib/api";
+import { toast } from "react-hot-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface DashboardStats {
   overview: {
@@ -30,7 +34,24 @@ interface DashboardStats {
   }[];
 }
 
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  is_active: boolean;
+}
+
+interface Expert {
+  id: number;
+  name: string;
+  role: string;
+  image: string;
+  is_active: boolean;
+}
+
 const DashboardPage = () => {
+  const router = useRouter();
   const [dbStatus, setDbStatus] = useState<{
     success?: boolean;
     message?: string;
@@ -41,10 +62,70 @@ const DashboardPage = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [experts, setExperts] = useState<Expert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardStats();
-  }, []);
+    const checkAuth = async () => {
+      try {
+        await authApi.getProfile();
+        loadData();
+      } catch (error) {
+        router.push("/dashboard_deazytech/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  const loadData = async () => {
+    try {
+      const [projectsData, expertsData] = await Promise.all([
+        projectsApi.getAll(),
+        expertsApi.getAll(),
+      ]);
+      setProjects(projectsData.data);
+      setExperts(expertsData.data);
+    } catch (error) {
+      toast.error("Failed to load data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authApi.logout();
+      router.push("/dashboard_deazytech/login");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
+
+  const handleDeleteProject = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this project?")) return;
+
+    try {
+      await projectsApi.delete(id);
+      setProjects(projects.filter((p) => p.id !== id));
+      toast.success("Project deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete project");
+    }
+  };
+
+  const handleDeleteExpert = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this expert?")) return;
+
+    try {
+      await expertsApi.delete(id);
+      setExperts(experts.filter((e) => e.id !== id));
+      toast.success("Expert deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete expert");
+    }
+  };
 
   const fetchDashboardStats = async () => {
     try {
@@ -92,7 +173,7 @@ const DashboardPage = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <DashboardLayout>
         <div className="p-8">
@@ -291,6 +372,119 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="p-8">
+        <div className="max-w-7xl mx-auto">
+          <Tabs defaultValue="projects" className="w-full">
+            <TabsList className="mb-8">
+              <TabsTrigger value="projects">Projects</TabsTrigger>
+              <TabsTrigger value="experts">Experts</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="projects">
+              <div className="bg-white shadow rounded-lg">
+                <div className="p-6 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      Projects
+                    </h2>
+                    <Link href="/dashboard_deazytech/projects/create">
+                      <Button>Add New Project</Button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project) => (
+                      <div
+                        key={project.id}
+                        className="bg-white border rounded-lg overflow-hidden"
+                      >
+                        <img
+                          src={`http://localhost:8000/storage/${project.image}`}
+                          alt={project.title}
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold">
+                            {project.title}
+                          </h3>
+                          <p className="text-gray-600 mt-2">
+                            {project.description}
+                          </p>
+                          <div className="mt-4 flex justify-end space-x-2">
+                            <Link
+                              href={`/dashboard_deazytech/projects/edit/${project.id}`}
+                            >
+                              <Button variant="outline">Edit</Button>
+                            </Link>
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteProject(project.id)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="experts">
+              <div className="bg-white shadow rounded-lg">
+                <div className="p-6 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      Experts
+                    </h2>
+                    <Link href="/dashboard_deazytech/experts/create">
+                      <Button>Add New Expert</Button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {experts.map((expert) => (
+                      <div
+                        key={expert.id}
+                        className="bg-white border rounded-lg overflow-hidden"
+                      >
+                        <img
+                          src={`http://localhost:8000/storage/${expert.image}`}
+                          alt={expert.name}
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold">
+                            {expert.name}
+                          </h3>
+                          <p className="text-gray-600">{expert.role}</p>
+                          <div className="mt-4 flex justify-end space-x-2">
+                            <Link
+                              href={`/dashboard_deazytech/experts/edit/${expert.id}`}
+                            >
+                              <Button variant="outline">Edit</Button>
+                            </Link>
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteExpert(expert.id)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </DashboardLayout>

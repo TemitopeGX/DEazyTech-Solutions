@@ -7,16 +7,16 @@ import { ArrowLeft, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { projectsApi } from "@/lib/api";
+import { toast } from "react-hot-toast";
 
 interface Project {
-  _id: string;
+  id: number;
   title: string;
   description: string;
   image: string;
   tags: string[];
   link: string;
-  features: string[];
-  gradient: string;
 }
 
 const EditProjectPage = () => {
@@ -25,17 +25,16 @@ const EditProjectPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState<Project>({
-    _id: "",
+    id: 0,
     title: "",
     description: "",
     image: "",
     tags: [],
     link: "",
-    features: [],
-    gradient: "",
   });
   const [currentTag, setCurrentTag] = useState("");
-  const [currentFeature, setCurrentFeature] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -45,13 +44,17 @@ const EditProjectPage = () => {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`/api/projects/${id}`);
-      const data = await response.json();
+      const data = await projectsApi.get(Number(id));
       setFormData(data);
+      if (data.image) {
+        setImagePreview(
+          `${process.env.NEXT_PUBLIC_API_URL}/storage/${data.image}`
+        );
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error fetching project:", error);
-      alert("Failed to fetch project details. Please try again.");
+      toast.error("Failed to fetch project details. Please try again.");
       router.push("/dashboard_deazytech/projects");
     }
   };
@@ -61,22 +64,25 @@ const EditProjectPage = () => {
     setSaving(true);
 
     try {
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("description", formData.description);
+      form.append("tags", JSON.stringify(formData.tags));
+      form.append("link", formData.link);
 
-      if (response.ok) {
-        router.push("/dashboard_deazytech/projects");
-      } else {
-        throw new Error("Failed to update project");
+      if (selectedImage) {
+        form.append("image", selectedImage);
       }
-    } catch (error) {
+
+      await projectsApi.update(Number(id), form);
+      toast.success("Project updated successfully");
+      router.push("/dashboard_deazytech/projects");
+    } catch (error: any) {
       console.error("Error updating project:", error);
-      alert("Failed to update project. Please try again.");
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to update project. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -87,6 +93,25 @@ const EditProjectPage = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Check file size (10MB = 10 * 1024 * 1024 bytes)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("Image size must be less than 10MB");
+        return;
+      }
+      setSelectedImage(file);
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const addTag = (e: React.KeyboardEvent) => {
@@ -104,24 +129,6 @@ const EditProjectPage = () => {
     setFormData((prev) => ({
       ...prev,
       tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }));
-  };
-
-  const addFeature = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && currentFeature.trim()) {
-      e.preventDefault();
-      setFormData((prev) => ({
-        ...prev,
-        features: [...prev.features, currentFeature.trim()],
-      }));
-      setCurrentFeature("");
-    }
-  };
-
-  const removeFeature = (featureToRemove: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      features: prev.features.filter((feature) => feature !== featureToRemove),
     }));
   };
 
@@ -188,105 +195,108 @@ const EditProjectPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Image URL
-              </label>
-              <Input
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                type="url"
-                required
-              />
+              <label className="block text-sm font-medium mb-2">Tags</label>
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-md"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="text-primary/60 hover:text-primary"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <Input
+                  value={currentTag}
+                  onChange={(e) => setCurrentTag(e.target.value)}
+                  onKeyDown={addTag}
+                  placeholder="Type a tag and press Enter"
+                />
+              </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
                 Project Link
               </label>
-              <Input
-                name="link"
-                value={formData.link}
-                onChange={handleChange}
-                type="url"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Tags</label>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {formData.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
-                  >
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(tag)}
-                      className="text-slate-500 hover:text-slate-700"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                ))}
+              <div className="relative">
+                <Input
+                  name="link"
+                  value={formData.link}
+                  onChange={handleChange}
+                  required
+                  type="url"
+                  placeholder="https://"
+                  className="pl-10"
+                />
+                <ArrowLeft className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               </div>
-              <Input
-                value={currentTag}
-                onChange={(e) => setCurrentTag(e.target.value)}
-                onKeyDown={addTag}
-                placeholder="Type a tag and press Enter"
-              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Features</label>
-              <div className="flex flex-col gap-2 mb-2">
-                {formData.features.map((feature) => (
-                  <div
-                    key={feature}
-                    className="flex items-center justify-between p-2 bg-slate-50 rounded-lg"
-                  >
-                    <span>{feature}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeFeature(feature)}
-                      className="text-slate-500 hover:text-slate-700"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+              <label className="block text-sm font-medium mb-2">
+                Image (max 10MB)
+              </label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="mx-auto h-32 w-auto"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedImage(null);
+                          setImagePreview(null);
+                        }}
+                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex text-sm text-gray-600">
+                        <label className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary/80">
+                          <span>Upload a new image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="sr-only"
+                            onChange={handleImageChange}
+                          />
+                        </label>
+                        <p className="pl-1">or drag and drop</p>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG, GIF up to 10MB
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
-              <Input
-                value={currentFeature}
-                onChange={(e) => setCurrentFeature(e.target.value)}
-                onKeyDown={addFeature}
-                placeholder="Type a feature and press Enter"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Gradient</label>
-              <Input
-                name="gradient"
-                value={formData.gradient}
-                onChange={handleChange}
-                required
-              />
             </div>
 
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => router.push("/dashboard_deazytech/projects")}
               >
                 Cancel
               </Button>
               <Button type="submit" disabled={saving}>
-                <Save className="w-4 h-4 mr-2" />
                 {saving ? "Saving..." : "Save Changes"}
               </Button>
             </div>

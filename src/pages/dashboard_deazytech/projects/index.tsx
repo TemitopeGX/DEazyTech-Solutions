@@ -5,17 +5,19 @@ import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { projectsApi } from "@/lib/api";
+import { toast } from "react-hot-toast";
 
 interface Project {
-  _id: string;
+  id: number;
   title: string;
   description: string;
-  displayImage: string;
+  image: string;
   tags: string[];
   link: string;
   features: string[];
   gradient: string;
-  createdAt: string;
+  created_at: string;
 }
 
 const ProjectsPage = () => {
@@ -28,28 +30,29 @@ const ProjectsPage = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch("/api/projects");
-      const data = await response.json();
-      setProjects(data);
+      const data = await projectsApi.getAll();
+      console.log("API Response:", data);
+      // Ensure data is an array before setting it
+      const projectsArray = Array.isArray(data) ? data : data.data || [];
+      console.log("Projects Array:", projectsArray);
+      setProjects(projectsArray);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching projects:", error);
+      toast.error("Failed to fetch projects");
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
-        const response = await fetch(`/api/projects/${id}`, {
-          method: "DELETE",
-        });
-
-        if (response.ok) {
-          setProjects(projects.filter((project) => project._id !== id));
-        }
+        await projectsApi.delete(id);
+        setProjects(projects.filter((project) => project.id !== id));
+        toast.success("Project deleted successfully");
       } catch (error) {
         console.error("Error deleting project:", error);
+        toast.error("Failed to delete project");
       }
     }
   };
@@ -97,15 +100,15 @@ const ProjectsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
                 <motion.div
-                  key={project._id}
+                  key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
                 >
                   <div className="aspect-video relative overflow-hidden">
-                    {project.displayImage ? (
+                    {project.image ? (
                       <img
-                        src={project.displayImage}
+                        src={`http://localhost:8000/storage/${project.image}`}
                         alt={project.title}
                         className="w-full h-full object-cover"
                       />
@@ -140,7 +143,7 @@ const ProjectsPage = () => {
                         className="flex items-center gap-1"
                       >
                         <Link
-                          href={`/dashboard_deazytech/projects/edit/${project._id}`}
+                          href={`/dashboard_deazytech/projects/edit/${project.id}`}
                         >
                           <Pencil className="w-3 h-3" />
                           Edit
@@ -149,7 +152,7 @@ const ProjectsPage = () => {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDelete(project._id)}
+                        onClick={() => handleDelete(project.id)}
                         className="flex items-center gap-1"
                       >
                         <Trash2 className="w-3 h-3" />

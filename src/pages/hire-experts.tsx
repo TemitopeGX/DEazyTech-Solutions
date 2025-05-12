@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { expertsApi } from "@/lib/api";
+import { toast } from "react-hot-toast";
 
 // Animation variants
 const fadeInUp = {
@@ -46,12 +48,13 @@ interface Expert {
   name: string;
   role: string;
   image: string;
-  skills: string[];
-  experience: string;
-  projects: number;
-  description: string;
-  linkedin?: string;
-  github?: string;
+  bio: string;
+  specialties: string[];
+  social_links: {
+    linkedin?: string;
+    github?: string;
+    twitter?: string;
+  };
 }
 
 interface ExpertiseArea {
@@ -62,52 +65,24 @@ interface ExpertiseArea {
 }
 
 const HireExpertsPage: React.FC = () => {
-  const experts: Expert[] = [
-    {
-      id: 1,
-      name: "Alex Johnson",
-      role: "Senior Software Developer",
-      image: "/images/experts/expert1.jpg",
-      skills: ["React", "Node.js", "TypeScript", "AWS", "MongoDB"],
-      experience: "8+ years",
-      projects: 50,
-      description:
-        "Full-stack developer specializing in scalable web applications and cloud architecture.",
-      linkedin: "https://linkedin.com/in/alexjohnson",
-      github: "https://github.com/alexjohnson",
-    },
-    {
-      id: 2,
-      name: "Sarah Chen",
-      role: "Mobile Development Lead",
-      image: "/images/experts/expert2.jpg",
-      skills: ["React Native", "iOS", "Android", "Flutter", "Firebase"],
-      experience: "6+ years",
-      projects: 35,
-      description:
-        "Mobile app expert with experience in cross-platform and native development.",
-      linkedin: "https://linkedin.com/in/sarahchen",
-    },
-    {
-      id: 3,
-      name: "Michael Brown",
-      role: "Solutions Architect",
-      image: "/images/experts/expert3.jpg",
-      skills: [
-        "System Design",
-        "Cloud Architecture",
-        "DevOps",
-        "Azure",
-        "Kubernetes",
-      ],
-      experience: "10+ years",
-      projects: 75,
-      description:
-        "Enterprise solutions architect specializing in cloud infrastructure and scalable systems.",
-      linkedin: "https://linkedin.com/in/michaelbrown",
-      github: "https://github.com/michaelbrown",
-    },
-  ];
+  const [experts, setExperts] = useState<Expert[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchExperts();
+  }, []);
+
+  const fetchExperts = async () => {
+    try {
+      const response = await expertsApi.getAll();
+      setExperts(response.data || []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching experts:", error);
+      toast.error("Failed to fetch experts");
+      setLoading(false);
+    }
+  };
 
   const expertiseAreas: ExpertiseArea[] = [
     {
@@ -188,7 +163,7 @@ const HireExpertsPage: React.FC = () => {
           {/* Grid pattern overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(45deg,#ff096c05_1px,transparent_1px),linear-gradient(-45deg,#8a0faf05_1px,transparent_1px)] bg-[size:32px_32px]" />
 
-          <div className="relative z-10 container mx-auto px-4">
+          <div className="container relative z-10">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -255,7 +230,7 @@ const HireExpertsPage: React.FC = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {[
@@ -311,84 +286,88 @@ const HireExpertsPage: React.FC = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {experts.map((expert, index) => (
-                <motion.div
-                  key={expert.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="group relative"
-                >
-                  <div className="p-6 rounded-2xl bg-background border border-border/50 shadow-lg hover:shadow-xl hover:border-[#ff096c]/50 transition-all duration-300">
-                    <div className="relative w-full h-64 mb-6 rounded-xl overflow-hidden">
-                      <Image
-                        src={expert.image}
-                        alt={expert.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+              {loading ? (
+                <div className="col-span-3 text-center py-12">
+                  Loading experts...
+                </div>
+              ) : experts.length === 0 ? (
+                <div className="col-span-3 text-center py-12">
+                  No experts available at the moment.
+                </div>
+              ) : (
+                experts.map((expert, index) => (
+                  <motion.div
+                    key={expert.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="group relative"
+                  >
+                    <div className="p-6 rounded-2xl bg-background border border-border/50 shadow-lg hover:shadow-xl hover:border-[#ff096c]/50 transition-all duration-300">
+                      <div className="relative w-full h-64 mb-6 rounded-xl overflow-hidden">
+                        {expert.image ? (
+                          <Image
+                            src={`http://localhost:8000/storage/${expert.image}`}
+                            alt={expert.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                            <span className="text-gray-400">No image</span>
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground mb-2">
+                        {expert.name}
+                      </h3>
+                      <p className="text-[#ff096c] font-semibold mb-3">
+                        {expert.role}
+                      </p>
+                      <p className="text-muted-foreground mb-4">{expert.bio}</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {expert.specialties.map((specialty, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-slate-50 text-muted-foreground rounded-full text-sm border border-border/50"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex space-x-4">
+                        {expert.social_links?.linkedin && (
+                          <a
+                            href={expert.social_links.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-[#ff096c] transition-colors"
+                          >
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                        {expert.social_links?.github && (
+                          <a
+                            href={expert.social_links.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-[#ff096c] transition-colors"
+                          >
+                            <Github className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      {expert.name}
-                    </h3>
-                    <p className="text-[#ff096c] font-semibold mb-3">
-                      {expert.role}
-                    </p>
-                    <p className="text-muted-foreground mb-4">
-                      {expert.description}
-                    </p>
-                    <div className="flex items-center mb-4">
-                      <Star className="text-yellow-400 w-4 h-4" />
-                      <span className="ml-2 text-muted-foreground">
-                        {expert.experience}
-                      </span>
-                      <span className="mx-2 text-muted-foreground/30">•</span>
-                      <span className="text-muted-foreground">
-                        {expert.projects}+ Projects
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {expert.skills.map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 bg-slate-50 text-muted-foreground rounded-full text-sm border border-border/50"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex space-x-4">
-                      {expert.linkedin && (
-                        <a
-                          href={expert.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-[#ff096c] transition-colors"
-                        >
-                          <Linkedin className="w-5 h-5" />
-                        </a>
-                      )}
-                      {expert.github && (
-                        <a
-                          href={expert.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-[#ff096c] transition-colors"
-                        >
-                          <Github className="w-5 h-5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))
+              )}
             </div>
           </div>
         </section>
 
         {/* Expertise Areas Section */}
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -448,7 +427,7 @@ const HireExpertsPage: React.FC = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 relative overflow-hidden bg-slate-50">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
