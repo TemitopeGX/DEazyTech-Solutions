@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { projectsApi, expertsApi, authApi } from "@/lib/api";
 import { toast } from "react-hot-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { Project } from "@/lib/api";
 
 interface DashboardStats {
   overview: {
@@ -32,14 +33,6 @@ interface DashboardStats {
     message: string;
     time: string;
   }[];
-}
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  is_active: boolean;
 }
 
 interface Expert {
